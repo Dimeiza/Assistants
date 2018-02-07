@@ -1,6 +1,7 @@
 #!/bin/bash
 
 wget https://raw.githubusercontent.com/Dimeiza/avs-device-sdk/master/tools/RaspberryPi/setup.sh
-chmod 700 ./setup.sh
+wget https://raw.githubusercontent.com/Dimeiza/avs-device-sdk/master/tools/RaspberryPi/config.txt
 
-./setup.sh
+chmod 700 ./setup.sh
+chmod 700 ./GoogleAssistant_setup.sh
