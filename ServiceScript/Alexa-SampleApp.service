@@ -1,0 +1,18 @@
+[Unit]
+Description=Alexa Device SDK Sample App
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment=PATH=/home/pi/Assistants/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/home/pi/Assistants/startsample.sh
+
+WorkingDirectory=/home/pi/Assistants
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+
