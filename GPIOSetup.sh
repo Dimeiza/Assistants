@@ -7,6 +7,6 @@ THIRD_PARTY_PATH="$CURRENT_DIR/third-party"
 cd "$THIRD_PARTY_PATH"
 
 git clone git://git.drogon.net/wiringPi
-cd ~/wiringPi
+cd ./wiringPi
 ./build
 
