@@ -11,10 +11,10 @@ echo ""
 serialno=$productid-$(date +%Y%m%d%H%M%S )
 
 cat << EOF > "config.txt"
-CLIENT_SECRET="$clientid"
+CLIENT_SECRET="$clientsecret"
 #NOTE: The Device Serial Number can be any unique number
 DEVICE_SERIAL_NUMBER="$serialno"
-CLIENT_ID="$clientsecret"
+CLIENT_ID="$clientid"
 PRODUCT_ID="$productid"
 EOF
 
