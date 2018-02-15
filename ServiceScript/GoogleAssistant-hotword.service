@@ -1,7 +1,7 @@
 [Unit]
 Description=Google Assistant Hotword App
 Wants=network-online.target
-After=network-online.target
+After=network-online.target Alexa-SampleApp.service
 
 [Service]
 Environment=VIRTUAL_ENV=/home/pi/Assistants/env
