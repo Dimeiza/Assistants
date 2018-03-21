@@ -67,7 +67,7 @@ models = sys.argv[1:]
 # capture SIGINT signal, e.g., Ctrl+C
 signal.signal(signal.SIGINT, signal_handler)
 
-sensitivity = [0.4,0.5]
+sensitivity = [0.6,0.6]
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = [alexa_callback, google_callback]
 print('Listening... Press Ctrl+C to exit')
@@ -81,5 +81,3 @@ detector.start(detected_callback=callbacks,
                sleep_time=0.03)
 
 detector.terminate()
-posix_ipc.unlink_message_queue("/google_assistant_queue")
-posix_ipc.unlink_message_queue("/alexa_queue")

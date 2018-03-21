@@ -172,7 +172,7 @@ then
     echo
 
     cd $SOURCE_PATH
-    git clone git://github.com/alexa/avs-device-sdk.git
+    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.6
 
 
     # change GStereamer sink
@@ -182,6 +182,7 @@ then
     patch -u avs-device-sdk/SampleApp/src/SampleApplication.cpp < patch/Alexa/SampleApplication.cpp.patch
     patch -u avs-device-sdk/SampleApp/src/CMakeLists.txt < patch/Alexa/CMakeLists.txt.patch
     patch -u avs-device-sdk/SampleApp/include/SampleApp/SampleApplication.h < patch/Alexa/SampleApplication.h.patch
+    patch -u avs-device-sdk/SampleApp/include/SampleApp/UserInputManager.h < patch/Alexa/UserInputManager.h.patch
     
     cp patch/Alexa/PosixQueueManager.cpp avs-device-sdk/SampleApp/src/
     cp patch/Alexa/PosixQueueManager.h avs-device-sdk/SampleApp/include/SampleApp/
@@ -267,7 +268,7 @@ EOF
 cat << EOF > "$START_SCRIPT"
 #!/bin/bash
 cd "$BUILD_PATH/SampleApp/src"
-./SampleApp "$CONFIG_FILE" "$THIRD_PARTY_PATH/snowboy/resources" 
+./SampleApp "$CONFIG_FILE" "$THIRD_PARTY_PATH/snowboy/resources" INFO
 EOF
 
 chmod +x "$START_SCRIPT"

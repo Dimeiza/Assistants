@@ -48,3 +48,13 @@ sed -i -e 's/from google_home_led_pattern import GoogleHomeLedPattern//' mic_hat
 
 touch mic_hat_4/__init__.py
 
+cd ..
+
+cat << EOF > "startAssistantControl.sh"
+#!/bin/bash
+source env/bin/activate
+cd AssistantControl
+python AssistantControl.py resources/alexa.umdl resources/snowboy.umdl
+EOF
+
+chmod +x startAssistantControl.sh

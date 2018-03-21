@@ -1,0 +1,15 @@
+--- SampleApp/src/UserInputManager.cpp	2018-03-21 08:07:49.815608143 +0000
++++ UserInputManager.cpp	2018-03-21 08:08:40.835209727 +0000
+@@ -220,9 +220,9 @@
+                         break;
+                 }
+             } while (!cancelReset);
+-        } else {
+-            m_interactionManager->errorValue();
+-        }
++//        } else {
++//            m_interactionManager->errorValue();
++//        }
+     }
+ }
+ 
