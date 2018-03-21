@@ -32,10 +32,17 @@ googlesamples-assistant-devicetool register-model --manufacturer "Raspberry Pi F
 
 echo "Testing the installed google assistant. Make a note of the generated Device-Id"
 
+python -m pip install posix_ipc
+
+cp patch/GoogleAssistant/posixqueue.py env/lib/python3.5/site-packages/googlesamples/assistant/grpc
+cp patch/GoogleAssistant/audio_helpers_for_queue.py env/lib/python3.5/site-packages/googlesamples/assistant/grpc
+cp patch/GoogleAssistant/googlesamples-assistant-posixqueue env/bin/
+chmod 755 env/bin/googlesamples-assistant-posixqueue
+
 cat << EOF > "startGoogleAssistant.sh"
 #!/bin/bash
 source env/bin/activate
-googlesamples-assistant-hotword --project_id $projectid --device_model_id $modelid
+googlesamples-assistant-posixqueue --project-id $projectid --device-model-id $modelid
 EOF
 
 chmod +x startGoogleAssistant.sh
