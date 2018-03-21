@@ -182,7 +182,7 @@ then
     patch -u avs-device-sdk/SampleApp/src/SampleApplication.cpp < patch/Alexa/SampleApplication.cpp.patch
     patch -u avs-device-sdk/SampleApp/src/CMakeLists.txt < patch/Alexa/CMakeLists.txt.patch
     patch -u avs-device-sdk/SampleApp/include/SampleApp/SampleApplication.h < patch/Alexa/SampleApplication.h.patch
-    patch -u avs-device-sdk/SampleApp/include/SampleApp/UserInputManager.h < patch/Alexa/UserInputManager.h.patch
+    patch -u avs-device-sdk/SampleApp/src/UserInputManager.cpp < patch/Alexa/UserInputManager.cpp.patch
     
     cp patch/Alexa/PosixQueueManager.cpp avs-device-sdk/SampleApp/src/
     cp patch/Alexa/PosixQueueManager.h avs-device-sdk/SampleApp/include/SampleApp/
