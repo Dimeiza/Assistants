@@ -1,11 +1,19 @@
---- avs-device-sdk/SampleApp/src/UserInputManager.cpp	2018-03-21 09:45:41.138155968 +0000
-+++ UserInputManager.cpp	2018-03-21 09:46:27.429500863 +0000
-@@ -221,7 +221,7 @@
+--- SampleApp/src/UserInputManager.cpp	2018-03-22 19:39:17.737822911 +0900
++++ UserInputManager.cpp	2018-03-22 19:38:21.000000000 +0900
+@@ -19,6 +19,7 @@
+ #include <AVSCommon/Utils/String/StringUtils.h>
+ #include "SampleApp/UserInputManager.h"
+ #include "SampleApp/ConsolePrinter.h"
++#include "unistd.h"
+ 
+ namespace alexaClientSDK {
+ namespace sampleApp {
+@@ -221,7 +222,7 @@
                  }
              } while (!cancelReset);
          } else {
 -            m_interactionManager->errorValue();
-+            // m_interactionManager->errorValue();
++        	usleep(500 * 1000);
          }
      }
  }

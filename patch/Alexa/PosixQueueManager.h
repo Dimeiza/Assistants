@@ -35,8 +35,8 @@ public:
 
 private:
 
+    mqd_t m_AlexaQueue;
     mqd_t m_AssistantControlQueue;
-
 
 	const char* finish="finish";
 	const char* speak="speak";

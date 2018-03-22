@@ -42,10 +42,11 @@ def google_callback():
 def communicateAssistant(led,messageQueue):
 
     led.wakeup()
+    print('wakeup')
     messageQueue.send('wakeup')
     
     while True:
-        msg = messageQueue.receive()
+        msg = assistantsControl_mq.receive()
         if msg[0] == b'finish':
             break
         elif msg[0] == b'speak':
@@ -72,8 +73,9 @@ detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = [alexa_callback, google_callback]
 print('Listening... Press Ctrl+C to exit')
 
-google_mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT)
-alexa_mq = posix_ipc.MessageQueue("/alexa_queue", posix_ipc.O_CREAT)
+google_mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT,write=True)
+alexa_mq = posix_ipc.MessageQueue("/alexa_queue", posix_ipc.O_CREAT,write=True)
+assistantsControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue",posix_ipc.O_CREAT,read=True)
 
 # main loop
 detector.start(detected_callback=callbacks,
@@ -81,3 +83,6 @@ detector.start(detected_callback=callbacks,
                sleep_time=0.03)
 
 detector.terminate()
+assistantsControl_mq.close()
+posix_ipc.unlink_message_queue("/AssistantsControlQueue")
+

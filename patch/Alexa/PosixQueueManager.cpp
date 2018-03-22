@@ -71,8 +71,8 @@ void PosixQueueManager::run() {
 
         if(!strcmp(buff,"wakeup")){
         	m_interactionManager->tap();
+           	sem_wait(&m_waitQueueSemaphore);
         }
-       	sem_wait(&m_waitQueueSemaphore);
     }
 }
 

@@ -55,7 +55,8 @@ END_OF_UTTERANCE = embedded_assistant_pb2.AssistResponse.END_OF_UTTERANCE
 DIALOG_FOLLOW_ON = embedded_assistant_pb2.DialogStateOut.DIALOG_FOLLOW_ON
 CLOSE_MICROPHONE = embedded_assistant_pb2.DialogStateOut.CLOSE_MICROPHONE
 DEFAULT_GRPC_DEADLINE = 60 * 3 + 5
-mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT)
+google_mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT)
+asssitantControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue", posix_ipc.O_CREAT)
 
 class SampleAssistant(object):
     """Sample Assistant that supports conversations and device actions.
@@ -137,7 +138,8 @@ class SampleAssistant(object):
             if resp.event_type == END_OF_UTTERANCE:
                 logging.info('End of audio request detected')
                 self.conversation_stream.stop_recording()
-                mq.send('think')
+                asssitantControl_mq.send('think')
+
                 
             if resp.speech_results:
                 logging.info('Transcript of user request: "%s".',
@@ -160,7 +162,9 @@ class SampleAssistant(object):
             elif resp.dialog_state_out.microphone_mode == CLOSE_MICROPHONE:
                 continue_conversation = False
                 logging.info('close microphone')
-                mq.send('speak')
+
+                asssitantControl_mq.send('speak')
+
             if resp.device_action.device_request_json:
                 device_request = json.loads(
                     resp.device_action.device_request_json
@@ -435,9 +439,11 @@ def main(api_endpoint, credentials, project_id,
         wait_for_user_trigger = not once
 
         while True:
-            msg = mq.receive()
+            msg = google_mq.receive()
             continue_conversation = assistant.assist()
-            mq.send('finish')
+            asssitantControl_mq.send('finish')
 
 if __name__ == '__main__':
     main()
+    google_mq.close()
+    posix_ipc.unlink_message_queue("/google_assistant_queue")
