@@ -17,14 +17,19 @@ std::unique_ptr<PosixQueueManager> PosixQueueManager::create(std::shared_ptr<Int
 
 PosixQueueManager::PosixQueueManager(std::shared_ptr<InteractionManager> interactionManager) : m_interactionManager{interactionManager} {
 
-	m_AssistantControlQueue = mq_open("/alexa_queue", O_RDWR| O_CREAT );
-	sem_init(&m_waitQueueSemaphore,0,1);
+	m_AssistantControlQueue = mq_open("/AssistantsControlQueue", O_RDWR| O_CREAT );
+	m_AlexaQueue = mq_open("/alexa_queue", O_RDWR| O_CREAT );
+    sem_init(&m_waitQueueSemaphore,0,1);
 
 }
 
 PosixQueueManager::~PosixQueueManager(){
-     mq_close(m_AssistantControlQueue);
-     sem_close(&m_waitQueueSemaphore);
+
+    mq_close(m_AssistantControlQueue);
+    mq_close(m_AlexaQueue);
+    mq_unlink("/alexa_queue");
+    
+    sem_close(&m_waitQueueSemaphore);
 }
 
 ssize_t PosixQueueManager::receive(char *buff){
@@ -32,8 +37,8 @@ ssize_t PosixQueueManager::receive(char *buff){
 	struct mq_attr attr;
     ssize_t n;
 
-    mq_getattr( m_AssistantControlQueue ,&attr );
-    n = mq_receive( m_AssistantControlQueue, buff, attr.mq_msgsize,NULL);
+    mq_getattr( m_AlexaQueue ,&attr );
+    n = mq_receive( m_AlexaQueue, buff, attr.mq_msgsize,NULL);
 	return n;
 
 }
