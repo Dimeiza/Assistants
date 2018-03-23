@@ -8,3 +8,6 @@ systemctl stop GoogleAssistant-hotword.service
 systemctl disable GoogleAssistant-hotword.service
 rm /lib/systemd/system/GoogleAssistant-hotword.service
 
+systemctl stop AssistantControl.service
+systemctl disable AssistantControl.service
+rm /lib/systemd/system/AssistantControl.service

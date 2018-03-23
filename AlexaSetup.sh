@@ -18,7 +18,5 @@ CLIENT_ID="$clientid"
 PRODUCT_ID="$productid"
 EOF
 
-wget https://raw.githubusercontent.com/Dimeiza/avs-device-sdk/master/tools/RaspberryPi/setup.sh
-chmod 700 ./setup.sh
-
+chmod 755 ./setup.sh
 ./setup.sh config.txt

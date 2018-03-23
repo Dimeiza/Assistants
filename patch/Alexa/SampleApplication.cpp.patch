@@ -1,0 +1,31 @@
+--- SampleApp/src/SampleApplication.cpp	2018-03-20 20:21:22.000000000 +0900
++++ ./SampleApplication.cpp	2018-03-17 20:29:39.769458674 +0900
+@@ -187,7 +187,9 @@
+ }
+ 
+ void SampleApplication::run() {
+-    m_userInputManager->run();
++    avsCommon::utils::threading::Executor executor;
++    executor.submit([this]() { m_posixQueueManager->run(); });
++	m_userInputManager->run();
+ }
+ 
+ SampleApplication::~SampleApplication() {
+@@ -602,6 +604,7 @@
+         client, micWrapper, userInterfaceManager, holdToTalkAudioProvider, tapToTalkAudioProvider);
+ #endif
+ 
++
+     client->addAlexaDialogStateObserver(interactionManager);
+ 
+     // Creating the input observer.
+@@ -610,6 +613,9 @@
+         alexaClientSDK::sampleApp::ConsolePrinter::simplePrint("Failed to create UserInputManager!");
+         return false;
+     }
++    m_posixQueueManager = alexaClientSDK::sampleApp::PosixQueueManager::create(interactionManager);
++
++    client->addAlexaDialogStateObserver(m_posixQueueManager);
+ 
+     return true;
+ }

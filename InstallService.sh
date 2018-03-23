@@ -14,3 +14,9 @@ systemctl start Alexa-SampleApp.service
 cp ./ServiceScript/GoogleAssistant-hotword.service /lib/systemd/system/GoogleAssistant-hotword.service
 systemctl enable GoogleAssistant-hotword.service
 systemctl start GoogleAssistant-hotword.service
+
+cp ./ServiceScript/AssistantControl.service /lib/systemd/system/AssistantControl.service
+systemctl enable AssistantControl.service
+systemctl start AssistantControl.service
+
+
