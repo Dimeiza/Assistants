@@ -17,9 +17,12 @@ interrupted = False
 def signal_handler(signal, frame):
     global interrupted
     interrupted = True
+    assistantsControl_mq.close()
+    posix_ipc.unlink_message_queue("/AssistantsControlQueue")
 
 
 def interrupt_callback():
+
     global interrupted
     return interrupted
 
@@ -83,6 +86,4 @@ detector.start(detected_callback=callbacks,
                sleep_time=0.03)
 
 detector.terminate()
-assistantsControl_mq.close()
-posix_ipc.unlink_message_queue("/AssistantsControlQueue")
 
