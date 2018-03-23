@@ -1,6 +1,4 @@
-AssistantControl(Tentative name)
-
-====
+# AssistantControl(Tentative name)
 
 Tools to assist when run Alexa and Google Assistant at the same time on Raspberry Pi(with Respeaker 2mic/4mic).
 
