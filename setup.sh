@@ -201,11 +201,11 @@ then
     -DCMAKE_BUILD_TYPE=DEBUG
 
     cd $BUILD_PATH
-    make SampleApp -j2
+    make SampleApp
 
 else
     cd $BUILD_PATH
-    make SampleApp -j2
+    make SampleApp
 fi
 
 echo
