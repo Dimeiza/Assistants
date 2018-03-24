@@ -55,7 +55,7 @@ END_OF_UTTERANCE = embedded_assistant_pb2.AssistResponse.END_OF_UTTERANCE
 DIALOG_FOLLOW_ON = embedded_assistant_pb2.DialogStateOut.DIALOG_FOLLOW_ON
 CLOSE_MICROPHONE = embedded_assistant_pb2.DialogStateOut.CLOSE_MICROPHONE
 DEFAULT_GRPC_DEADLINE = 60 * 3 + 5
-google_mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT)
+google_mq = posix_ipc.MessageQueue("/GoogleAssistantQueue", posix_ipc.O_CREAT)
 asssitantControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue", posix_ipc.O_CREAT)
 
 class SampleAssistant(object):
@@ -104,7 +104,7 @@ class SampleAssistant(object):
             return False
         self.conversation_stream.close()
         google_mq.close()
-        posix_ipc.unlink_message_queue("/google_assistant_queue")
+        posix_ipc.unlink_message_queue("/GoogleAssistantQueue")
 
     def is_grpc_error_unavailable(e):
         is_grpc_error = isinstance(e, grpc.RpcError)
