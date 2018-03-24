@@ -17,7 +17,7 @@ interrupted = False
 def signal_handler(signal, frame):
 
     assistantsControl_mq.close()
-
+    posix_ipc.unlink_message_queue("/AssistantsControlQueue")
     global interrupted
     interrupted = True
 
