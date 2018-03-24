@@ -15,7 +15,9 @@ from mic_hat_4 import google_home_led_pattern
 interrupted = False
 
 def signal_handler(signal, frame):
+
     assistantsControl_mq.close()
+
     global interrupted
     interrupted = True
 
@@ -75,8 +77,8 @@ detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = [alexa_callback, google_callback]
 print('Listening... Press Ctrl+C to exit')
 
-google_mq = posix_ipc.MessageQueue("/google_assistant_queue", posix_ipc.O_CREAT,write=True)
-alexa_mq = posix_ipc.MessageQueue("/alexa_queue", posix_ipc.O_CREAT,write=True)
+google_mq = posix_ipc.MessageQueue("/GoogleAssistantQueue", posix_ipc.O_CREAT)
+alexa_mq = posix_ipc.MessageQueue("/AlexaQueue", posix_ipc.O_CREAT)
 assistantsControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue",posix_ipc.O_CREAT,read=True)
 
 # main loop
