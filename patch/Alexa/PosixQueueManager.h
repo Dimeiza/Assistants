@@ -46,8 +46,7 @@ private:
 	void send(const char *buff,ssize_t len);
 
 	std::shared_ptr<InteractionManager> m_interactionManager;
-	sem_t m_waitQueueSemaphore;
-
+    DialogUXState m_previousState;
 };
 
 }  // namespace sampleApp

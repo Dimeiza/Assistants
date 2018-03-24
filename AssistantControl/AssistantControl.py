@@ -15,10 +15,9 @@ from mic_hat_4 import google_home_led_pattern
 interrupted = False
 
 def signal_handler(signal, frame):
+    assistantsControl_mq.close()
     global interrupted
     interrupted = True
-    assistantsControl_mq.close()
-    posix_ipc.unlink_message_queue("/AssistantsControlQueue")
 
 
 def interrupt_callback():

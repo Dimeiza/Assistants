@@ -19,7 +19,8 @@ PosixQueueManager::PosixQueueManager(std::shared_ptr<InteractionManager> interac
 
 	m_AssistantControlQueue = mq_open("/AssistantsControlQueue", O_RDWR| O_CREAT );
 	m_AlexaQueue = mq_open("/alexa_queue", O_RDWR| O_CREAT );
-    sem_init(&m_waitQueueSemaphore,0,1);
+
+    m_previousState = DialogUXState::IDLE;
 
 }
 
@@ -29,7 +30,6 @@ PosixQueueManager::~PosixQueueManager(){
     mq_close(m_AlexaQueue);
     mq_unlink("/alexa_queue");
     
-    sem_close(&m_waitQueueSemaphore);
 }
 
 ssize_t PosixQueueManager::receive(char *buff){
@@ -51,21 +51,26 @@ void PosixQueueManager::onDialogUXStateChanged(DialogUXState newState){
 
     switch (newState) {
         case DialogUXState::IDLE:
-        	send(finish,strlen(finish));
-        	sem_post(&m_waitQueueSemaphore);
+            if(m_previousState != DialogUXState::IDLE){
+                send(finish,strlen(finish));
+            }
+            m_previousState = newState;
             break;
         case DialogUXState::LISTENING:
+            m_previousState = newState;
             break;
         case DialogUXState::THINKING:
         	send(think,strlen(think));
+            m_previousState = newState;
             break;
         case DialogUXState::SPEAKING:
-        	send(speak,strlen(speak));
+         	send(speak,strlen(speak));
+            m_previousState = newState;
             break;
         case DialogUXState::FINISHED:
             break;
-
     }
+    
 }
 
 void PosixQueueManager::run() {
@@ -73,10 +78,8 @@ void PosixQueueManager::run() {
 	char buff[256] = {0};
 	while (true) {
         receive(buff);
-
         if(!strcmp(buff,"wakeup")){
         	m_interactionManager->tap();
-           	sem_wait(&m_waitQueueSemaphore);
         }
     }
 }

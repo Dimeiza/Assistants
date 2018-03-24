@@ -104,7 +104,6 @@ class SampleAssistant(object):
             return False
         self.conversation_stream.close()
         google_mq.close()
-        posix_ipc.unlink_message_queue("/google_assistant_queue")
 
     def is_grpc_error_unavailable(e):
         is_grpc_error = isinstance(e, grpc.RpcError)
