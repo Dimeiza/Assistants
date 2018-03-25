@@ -139,9 +139,6 @@ then
     sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
     pip install flask commentjson
 
-	# for simultaneously
-	sudo apt-get -y install pulseaudio pavucontrol
-
     # create / paths
     echo
     echo "==============> CREATING PATHS AND GETTING SOUND FILES ============"
@@ -247,23 +244,6 @@ cat $CONFIG_FILE
 echo
 echo "==============> SAVING AUDIO CONFIGURATION FILE =============="
 echo
-
-cat << EOF > "$SOUND_CONFIG"
-pcm.pulse {
-    type pulse
-}
-
-ctl.pulse {
-    type pulse
-}
-
-pcm.!default {
-    type pulse
-}
-ctl.!default {
-    type pulse
-}
-EOF
 
 cat << EOF > "$START_SCRIPT"
 #!/bin/bash
