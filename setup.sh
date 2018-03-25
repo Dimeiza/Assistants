@@ -241,10 +241,6 @@ echo "==============> FINAL CONFIGURATION  =============="
 echo
 cat $CONFIG_FILE
 
-echo
-echo "==============> SAVING AUDIO CONFIGURATION FILE =============="
-echo
-
 cat << EOF > "$START_SCRIPT"
 #!/bin/bash
 cd "$BUILD_PATH/SampleApp/src"
