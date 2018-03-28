@@ -46,7 +46,7 @@ You need:
 
     * [ReSpeaker 4-Mic Array for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html)
 
-4. USB Sound Output(Recommended).
+4. USB Sound Output(Iecommended: if you use Respeaker 4-Mic).
     * [For example](https://www.amazon.co.uk/TechRise-External-Aluminum-Headphone-Microphone/dp/B0789CN8CT)
     * I seem it is stabler than builtin(bcm2835) sound output.
 
@@ -152,14 +152,6 @@ bash Respeaker4Mic.sh
 setupAssistantControl.sh
 ```
 
-### SoundDevice Check
-
-1. On Raspbian Desktop, Open menu and choice "Sound & Video" -> "PulseAudio Volume Control".
-
-1. Click "Configuration" Tab, and check that "seeed-4mic-voicecard" profile is "Multichannel input".
-
-1. If you use USB Sound card, check "bcm2835 ALSA" profile is "Off" and "USB Audio Device" profile is "Analog Stereo output".
-
 ## Usage
 
 At first, I recommend that you use this tool with terminals.
@@ -248,7 +240,32 @@ sudo bash UninstallService.sh
 
 ## Known Issue
 
-It may not respond correctly to the first several calls to Alexa. If you call for it several times, Alexa should be working properly.
+### Issue of Google Assistant  
+
+There may be noise on Google Assistant's response when you use ReSpeaker 4-Mic + Raspberry Pi 3 audio output(without USB soundcard)
+
+In this case, I recommend that you use PulseAudio with USB soundcard.
+
+If you do so, check sound configuration before you run both assistants.
+
+#### SoundDevice Check
+
+1. On Raspbian Desktop, Open menu and choice "Sound & Video" -> "PulseAudio Volume Control".
+
+1. Click "Configuration" Tab, and check that "seeed-4mic-voicecard" profile is "Multichannel input".
+
+1. If you use USB Sound card, check "bcm2835 ALSA" profile is "Off" and "USB Audio Device" profile is "Analog Stereo output".
+
+### Unsynchronized status between AssistantControl and both assistant
+
+It may occur that a status of AssistantControl unsyncronize with Alexa or Google Assistant.
+(For example, Alexa finished speaking but AssistantControl may not sense next wakeword)
+
+In this case, this problem may be solved if you execute this command.
+
+```
+sudo rm /dev/mqueue/*
+```
 
 ## dependency 
 
