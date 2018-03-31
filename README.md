@@ -152,6 +152,24 @@ bash Respeaker4Mic.sh
 setupAssistantControl.sh
 ```
 
+2. Modify AssistantControl/AssistantControl.py as following to match your ReSpeaker.
+
+* ReSpeaker 2-Mic Pi Hat
+
+``` 
+from mic_hat import pixels
+from mic_hat import alexa_led_pattern
+from mic_hat import google_home_led_pattern
+```
+
+* ReSpeaker 4-Mic Array for Raspberry Pi
+
+``` 
+from mic_hat_4 import pixels
+from mic_hat_4 import alexa_led_pattern
+from mic_hat_4 import google_home_led_pattern
+```
+
 ## Usage
 
 At first, I recommend that you use this tool with terminals.
