@@ -8,6 +8,8 @@ This tool is an eternal PoC(Proof of Concept). You can only use this tool at you
 And I strongly recommended that this tool only use a power user.
 If you are a newbie of raspberry pi and linux, I recommend that you don't use this tool, and you use both assistants only according to official procedures.
 
+In principle, I don't hope to receive a question how to execute Assistants in your environment. But if you find a point of improvement, you can share it in issue in this repository. I can't promise to improve, but I will read your issue.
+
 ## Description
 
 This tool/scripts features are:
