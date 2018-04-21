@@ -21,8 +21,6 @@ python3 -m venv env
 env/bin/python -m pip install --upgrade pip setuptools wheel
 source env/bin/activate
 
-python -m pip install --upgrade --no-binary :all:  grpcio
-
 python -m pip install --upgrade google-assistant-library
 
 python -m pip install --upgrade google-assistant-sdk[samples]
