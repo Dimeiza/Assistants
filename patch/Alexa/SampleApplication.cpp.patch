@@ -11,19 +11,11 @@
  }
  
  SampleApplication::~SampleApplication() {
-@@ -602,6 +604,7 @@
-         client, micWrapper, userInterfaceManager, holdToTalkAudioProvider, tapToTalkAudioProvider);
- #endif
- 
-+
-     client->addAlexaDialogStateObserver(interactionManager);
- 
-     // Creating the input observer.
 @@ -610,6 +613,9 @@
          alexaClientSDK::sampleApp::ConsolePrinter::simplePrint("Failed to create UserInputManager!");
          return false;
      }
-+    m_posixQueueManager = alexaClientSDK::sampleApp::PosixQueueManager::create(interactionManager);
++    m_posixQueueManager = alexaClientSDK::sampleApp::PosixQueueManager::create(m_interactionManager);
 +
 +    client->addAlexaDialogStateObserver(m_posixQueueManager);
  

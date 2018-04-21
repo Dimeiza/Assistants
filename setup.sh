@@ -15,6 +15,72 @@
 # permissions and limitations under the License.
 # 
 
+
+LOCALE=${LOCALE:-'en-US'}
+
+PORT_AUDIO_FILE="pa_stable_v190600_20161030.tgz"
+PORT_AUDIO_DOWNLOAD_URL="http://www.portaudio.com/archives/$PORT_AUDIO_FILE"
+
+TEST_MODEL_DOWNLOAD="https://github.com/Sensory/alexa-rpi/blob/master/models/spot-alexa-rpi-31000.snsr"
+
+BUILD_TESTS=${BUILD_TESTS:-'true'}
+
+CURRENT_DIR="$(pwd)"
+INSTALL_BASE=${INSTALL_BASE:-"$CURRENT_DIR"}
+SOURCE_FOLDER=${SDK_LOC:-''}
+THIRD_PARTY_FOLDER=${THIRD_PARTY_LOC:-'third-party'}
+BUILD_FOLDER=${BUILD_FOLDER:-'build'}
+SOUNDS_FOLDER=${SOUNDS_FOLDER:-'sounds'}
+DB_FOLDER=${DB_FOLDER:-'db'}
+
+SOURCE_PATH="$INSTALL_BASE/$SOURCE_FOLDER"
+THIRD_PARTY_PATH="$INSTALL_BASE/$THIRD_PARTY_FOLDER"
+BUILD_PATH="$INSTALL_BASE/$BUILD_FOLDER"
+SOUNDS_PATH="$INSTALL_BASE/$SOUNDS_FOLDER"
+DB_PATH="$INSTALL_BASE/$DB_FOLDER"
+CONFIG_DB_PATH="$DB_PATH"
+UNIT_TEST_MODEL_PATH="$INSTALL_BASE/avs-device-sdk/KWD/inputs/SensoryModels/"
+UNIT_TEST_MODEL="$THIRD_PARTY_PATH/alexa-rpi/models/spot-alexa-rpi-31000.snsr"
+CONFIG_FILE="$BUILD_PATH/Integration/AlexaClientSDKConfig.json"
+TEST_SCRIPT="$INSTALL_BASE/test.sh"
+LIB_SUFFIX="a"
+
+GSTREAMER_AUDIO_SINK="autoaudiosink"
+
+get_platform() {
+  uname_str=`uname -a`
+
+  if [[ "$uname_str" ==  "Linux raspberrypi"* ]]
+  then
+    result="pi"
+  elif [[ "$uname_str" ==  "MINGW64"* ]]
+  then
+    result="mingw64"
+  else
+    result=""
+  fi
+}
+
+# get_platform
+# PLATFORM=$result
+# 
+# if [ "$PLATFORM" == "pi" ]
+# then
+# source pi.sh
+# elif [ "$PLATFORM" == "mingw64" ]
+# then
+#   source mingw.sh
+# else
+#   echo "The installation script doesn't support current system. (System: $(uname -a))"
+#   exit 1
+# fi
+
+install_dependencies() {
+  sudo apt-get update
+  sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
+  pip install flask commentjson
+}
+
 echo "################################################################################"
 echo "################################################################################"
 echo ""
@@ -55,18 +121,15 @@ else
   exit 1
 fi
 
-
-
-
-
 if [ $# -eq 0 ]
 then
   echo  'bash setup.sh <config-file>'
   echo  'the config file must contain the following:'
   echo  '   CLIENT_ID=<OAuth client ID>'
-  echo  '   CLIENT_SECRET=<OAuth client secret>'  
   echo  '   PRODUCT_NAME=<your product name for device>'
   echo  '   DEVICE_SERIAL_NUMBER=<your device serial number>'
+
+  exit 1
 fi
 
 source $1
@@ -76,12 +139,6 @@ set -e
 if [[ ! "$CLIENT_ID" =~ amzn1\.application-oa2-client\.[0-9a-z]{32} ]]
 then
    echo 'client ID is invalid!'
-   exit 1
-fi
-
-if [[ ! "$CLIENT_SECRET" =~ [0-9a-f]{64} ]]
-then 
-   echo 'client secret is invalid!'
    exit 1
 fi
 
@@ -97,37 +154,6 @@ then
    exit 1
 fi
 
-LOCALE=${LOCALE:-'en-US'}
-
-PORT_AUDIO_FILE="pa_stable_v190600_20161030.tgz"
-PORT_AUDIO_DOWNLOAD_URL="http://www.portaudio.com/archives/$PORT_AUDIO_FILE"
-
-TEST_MODEL_DOWNLOAD="https://github.com/Sensory/alexa-rpi/blob/master/models/spot-alexa-rpi-31000.snsr"
-
-BUILD_TESTS=${BUILD_TESTS:-'true'}
-
-CURRENT_DIR="$(pwd)"
-INSTALL_BASE=${INSTALL_BASE:-"$CURRENT_DIR"}
-SOURCE_FOLDER=${SDK_LOC:-''}
-THIRD_PARTY_FOLDER=${THIRD_PARTY_LOC:-'third-party'}
-BUILD_FOLDER=${BUILD_FOLDER:-'build'}
-SOUNDS_FOLDER=${SOUNDS_FOLDER:-'sounds'}
-DB_FOLDER=${DB_FOLDER:-'db'}
-
-SOURCE_PATH="$INSTALL_BASE/$SOURCE_FOLDER"
-THIRD_PARTY_PATH="$INSTALL_BASE/$THIRD_PARTY_FOLDER"
-BUILD_PATH="$INSTALL_BASE/$BUILD_FOLDER"
-SOUNDS_PATH="$INSTALL_BASE/$SOUNDS_FOLDER"
-DB_PATH="$INSTALL_BASE/$DB_FOLDER"
-UNIT_TEST_MODEL_PATH="$INSTALL_BASE/avs-device-sdk/KWD/inputs/SensoryModels/"
-UNIT_TEST_MODEL="$THIRD_PARTY_PATH/alexa-rpi/models/spot-alexa-rpi-31000.snsr"
-
-CONFIG_FILE="$BUILD_PATH/Integration/AlexaClientSDKConfig.json"
-SOUND_CONFIG="$HOME/.asoundrc"
-START_SCRIPT="$INSTALL_BASE/startsample.sh"
-START_AUTH_SCRIPT="$INSTALL_BASE/startauth.sh"
-TEST_SCRIPT="$INSTALL_BASE/test.sh"
-
 if [ ! -d "$BUILD_PATH" ]
 then
 
@@ -135,9 +161,7 @@ then
     echo "==============> INSTALLING REQUIRED TOOLS AND PACKAGE ============"
     echo
 
-    sudo apt-get update
-    sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
-    pip install flask commentjson
+    install_dependencies
 
     # create / paths
     echo
@@ -163,28 +187,26 @@ then
     ./configure --without-jack
     make
 
+#    run_os_specifics
+
     #get sdk 
     echo
     echo "==============> CLONING SDK =============="
     echo
 
     cd $SOURCE_PATH
-    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.6
+    git clone git://github.com/alexa/avs-device-sdk.git
 
-
-    # change GStereamer sink
-    sed -i -e 's/autoaudiosink/alsasink/' avs-device-sdk/MediaPlayer/src/MediaPlayer.cpp
-    
     # patch the SampleApp 
     patch -u avs-device-sdk/SampleApp/src/SampleApplication.cpp < patch/Alexa/SampleApplication.cpp.patch
     patch -u avs-device-sdk/SampleApp/src/CMakeLists.txt < patch/Alexa/CMakeLists.txt.patch
     patch -u avs-device-sdk/SampleApp/include/SampleApp/SampleApplication.h < patch/Alexa/SampleApplication.h.patch
     patch -u avs-device-sdk/SampleApp/src/UserInputManager.cpp < patch/Alexa/UserInputManager.cpp.patch
-    
+
     cp patch/Alexa/PosixQueueManager.cpp avs-device-sdk/SampleApp/src/
     cp patch/Alexa/PosixQueueManager.h avs-device-sdk/SampleApp/include/SampleApp/
-    
-    # make the SDK(Without wakeword)
+
+    # make the SDK
     echo
     echo "==============> BUILDING SDK =============="
     echo
@@ -192,17 +214,16 @@ then
     cd $BUILD_PATH
     cmake "$SOURCE_PATH/avs-device-sdk" \
     -DGSTREAMER_MEDIA_PLAYER=ON -DPORTAUDIO=ON \
-    -DPORTAUDIO_LIB_PATH="$THIRD_PARTY_PATH/portaudio/lib/.libs/libportaudio.a" \
+    -DPORTAUDIO_LIB_PATH="$THIRD_PARTY_PATH/portaudio/lib/.libs/libportaudio.$LIB_SUFFIX" \
     -DPORTAUDIO_INCLUDE_DIR="$THIRD_PARTY_PATH/portaudio/include" \
-    -DACSDK_EMIT_SENSITIVE_LOGS=OFF \
-    -DCMAKE_BUILD_TYPE=RELEASE
+    -DCMAKE_BUILD_TYPE=DEBUG
 
     cd $BUILD_PATH
-    make SampleApp
+    make SampleApp -j2
 
 else
     cd $BUILD_PATH
-    make SampleApp
+    make SampleApp -j2
 fi
 
 echo
@@ -212,26 +233,35 @@ echo
 cat << EOF > "$CONFIG_FILE"
 {
     "alertsCapabilityAgent":{
-        "databaseFilePath":"$DB_PATH/alerts.db"
+        "databaseFilePath":"$CONFIG_DB_PATH/alerts.db"
     },
     "certifiedSender":{
-        "databaseFilePath":"$DB_PATH/certifiedSender.db"
+        "databaseFilePath":"$CONFIG_DB_PATH/certifiedSender.db"
     },
     "settings":{
-        "databaseFilePath":"$DB_PATH/settings.db",
+        "databaseFilePath":"$CONFIG_DB_PATH/settings.db",
         "defaultAVSClientSettings":{
             "locale":"$LOCALE"
         }
     },
     "notifications":{
-        "databaseFilePath":"$DB_PATH/notifications.db"
+        "databaseFilePath":"$CONFIG_DB_PATH/notifications.db"
     },
-    "authDelegate":{
-      "clientId":"$CLIENT_ID",
-        "clientSecret":"$CLIENT_SECRET",
+    "cblAuthDelegate":{
+        "databaseFilePath":"$CONFIG_DB_PATH/cblAuthDelegate.db"
+    },
+    "deviceInfo":{
+        "clientId":"$CLIENT_ID",
         "deviceSerialNumber":"$DEVICE_SERIAL_NUMBER",
-        "refreshToken":"",
         "productId":"$PRODUCT_ID"
+    },
+    "dcfDelegate":{
+    },
+    "miscDatabase":{
+        "databaseFilePath":"$CONFIG_DB_PATH/miscDatabase.db"
+    },
+    "gstreamerMediaPlayer":{
+        "audioSink":"$GSTREAMER_AUDIO_SINK"
     }
 }
 EOF
@@ -241,17 +271,12 @@ echo "==============> FINAL CONFIGURATION  =============="
 echo
 cat $CONFIG_FILE
 
+# generate_start_script
+
 cat << EOF > "$START_SCRIPT"
 #!/bin/bash
 cd "$BUILD_PATH/SampleApp/src"
 ./SampleApp "$CONFIG_FILE" "$THIRD_PARTY_PATH/snowboy/resources" INFO
-EOF
-
-chmod +x "$START_SCRIPT"
-
-cat << EOF > "$START_AUTH_SCRIPT"
-cd "$BUILD_PATH"
-python AuthServer/AuthServer.py
 EOF
 
 cat << EOF > "$TEST_SCRIPT" 
@@ -263,15 +288,7 @@ cp "$UNIT_TEST_MODEL" "$UNIT_TEST_MODEL_PATH"
 cd $BUILD_PATH
 make all test -j2
 chmod +x "$START_SCRIPT"
-chmod +x "$START_AUTH_SCRIPT"
 EOF
 
 echo " **** Completed Configuration/Build ***"
-
-echo " **** device authentication ***"
-
-bash $CURRENT_DIR/startauth.sh
-
-echo " **** Completed device authentication ***"
-
 
