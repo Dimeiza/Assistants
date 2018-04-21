@@ -44,8 +44,8 @@ UNIT_TEST_MODEL="$THIRD_PARTY_PATH/alexa-rpi/models/spot-alexa-rpi-31000.snsr"
 CONFIG_FILE="$BUILD_PATH/Integration/AlexaClientSDKConfig.json"
 TEST_SCRIPT="$INSTALL_BASE/test.sh"
 LIB_SUFFIX="a"
-
-GSTREAMER_AUDIO_SINK="autoaudiosink"
+START_SCRIPT="$INSTALL_BASE/startsample.sh"
+GSTREAMER_AUDIO_SINK="alsasink"
 
 get_platform() {
   uname_str=`uname -a`
