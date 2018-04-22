@@ -9,7 +9,7 @@ And I strongly recommended that this tool only use a power user.
 If you are a newbie of raspberry pi and linux, I recommend that you don't use this tool, and you use both assistants only according to official procedures.
 
 This prototype only written for me. Therefore, you can't expect support and guarantee from me.
-But if you still hope to use this prototype, you have to read official dociment of both assistant carefully.
+But if you still hope to use this prototype, you have to read official document of both assistant carefully.
 
 https://github.com/alexa/avs-device-sdk
 
