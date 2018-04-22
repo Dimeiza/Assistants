@@ -67,7 +67,8 @@ git clone https://github.com/Dimeiza/Assistants.git
     * You need these information to register Raspberry Pi as Alexa Device.
         * Client ID
         * Product ID
-    * I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script) carefully.
+    * I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script) carefully.
+    * If you had used AVS Device SDK before 1.6, see https://github.com/alexa/avs-device-sdk/wiki/Code-Based-Linking----Configuration-Update-Guide. Procedure to Prepare Client ID is changed.
 
 4. Into Assistants folder, and run this command.
 
