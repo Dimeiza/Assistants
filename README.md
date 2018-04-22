@@ -8,7 +8,18 @@ This tool is an eternal PoC(Proof of Concept). You can only use this tool at you
 And I strongly recommended that this tool only use a power user.
 If you are a newbie of raspberry pi and linux, I recommend that you don't use this tool, and you use both assistants only according to official procedures.
 
-In principle, I don't hope to receive a question how to execute Assistants in your environment. But if you find a point of improvement, you can share it in issue in this repository. I can't promise to improve, but I will read your issue.
+This prototype only written for me. Therefore, you can't expect support and guarantee from me.
+But if you still hope to use this prototype, you have to read official dociment of both assistant carefully.
+
+https://github.com/alexa/avs-device-sdk
+
+https://github.com/googlesamples/assistant-sdk-python
+
+I expect a person that use this prototype have enough knowledge of both Assistant.
+
+If you have a trouble to execute this prototype, At first, you have to confirm that this problem is occured even if you follow official installation procedure. If so, You should send a issue to official team directly. It is earlier than sending issue me to resolve your problem.
+
+In principle, I don't receive a question how to execute Assistants in your environment. But if you find a point of improvement, you can share it in issue in this repository. I can't promise to improve, but I will read your issue.
 
 ## Description
 
@@ -56,6 +67,8 @@ You need:
 
 ### Alexa setup
 
+I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script) carefully. Following procedure is similar to it.
+
 1. Boot with fresh Raspbian Stretch.
 2. Clone this repository.
 
@@ -67,7 +80,7 @@ git clone https://github.com/Dimeiza/Assistants.git
     * You need these information to register Raspberry Pi as Alexa Device.
         * Client ID
         * Product ID
-    * I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script) carefully.
+
     * If you had used AVS Device SDK before 1.6, see https://github.com/alexa/avs-device-sdk/wiki/Code-Based-Linking----Configuration-Update-Guide. Procedure to Prepare Client ID is changed.
 
 4. Into Assistants folder, and run this command.
@@ -91,6 +104,7 @@ bash setup.sh config.txt
 ```
 
 8. Wait to finish script.
+
 
 ### Google Assistant setup
 
@@ -184,6 +198,9 @@ cd Assistants
 ```
 
 After several seconds, Alexa is booted.
+At first time boot, Alexa may appears message for authentication(URL and pass code).
+You have to finish authentication before you use Alexa.
+
 This Alexa can control with keyboard. If you needed, you can change a language Alexa uses.
 
 2. Open 2nd Terminal and these commands.
