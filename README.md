@@ -66,9 +66,8 @@ git clone https://github.com/Dimeiza/Assistants.git
 3. Complete Alexa developer registration.
     * You need these information to register Raspberry Pi as Alexa Device.
         * Client ID
-        * Client Secret
         * Product ID
-    * I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script)
+    * I recommend that you refer [avs-device-sdk installation guide](https://github.com/alexa/avs-device-sdk/wiki/Raspberry-Pi-Quick-Start-Guide-with-Script) carefully.
 
 4. Into Assistants folder, and run this command.
 
@@ -79,12 +78,16 @@ cd Assisntants
 5. Get template of config.txt
 
 ```
-https://raw.githubusercontent.com/alexa/avs-device-sdk/master/tools/Install/config.txt
+wget https://raw.githubusercontent.com/alexa/avs-device-sdk/master/tools/Install/config.txt
 ```
 
 6. Update config.txt with the Client ID and Product ID for your registered product and save.
 
 7. Run the setup script with your configuration as an argument:
+
+```
+bash setup.sh config.txt
+```
 
 8. Wait to finish script.
 
