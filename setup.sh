@@ -279,6 +279,8 @@ cd "$BUILD_PATH/SampleApp/src"
 ./SampleApp "$CONFIG_FILE" "$THIRD_PARTY_PATH/snowboy/resources" INFO
 EOF
 
+chmod +x "$START_SCRIPT"
+
 cat << EOF > "$TEST_SCRIPT" 
 echo
 echo "==============> BUILDING Tests =============="
@@ -287,6 +289,7 @@ mkdir -p "$UNIT_TEST_MODEL_PATH"
 cp "$UNIT_TEST_MODEL" "$UNIT_TEST_MODEL_PATH"
 cd $BUILD_PATH
 make all test -j2
+
 chmod +x "$START_SCRIPT"
 EOF
 

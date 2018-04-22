@@ -74,23 +74,19 @@ git clone https://github.com/Dimeiza/Assistants.git
 
 ```
 cd Assisntants
-bash AlexaSetup.sh
 ```
 
-5. Follow the prompt instructions to input registered information.
+5. Get template of config.txt
 
 ```
-"Your Client ID:"
-"Your Client Secret:"
-"your product id:"
+https://raw.githubusercontent.com/alexa/avs-device-sdk/master/tools/Install/config.txt
 ```
 
-6. At next prompt, input "AGREE".
+6. Update config.txt with the Client ID and Product ID for your registered product and save.
 
-7. Wait for a while until the registration URL(http://127.0.0.1:3000) appears. Open this URL your browser and log in your Amazon account.
+7. Run the setup script with your configuration as an argument:
 
 8. Wait to finish script.
-
 
 ### Google Assistant setup
 
