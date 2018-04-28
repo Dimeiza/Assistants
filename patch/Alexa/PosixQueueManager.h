@@ -46,7 +46,12 @@ private:
 	void send(const char *buff,ssize_t len);
 
 	std::shared_ptr<InteractionManager> m_interactionManager;
-    DialogUXState m_previousState;
+    DialogUXState m_state;
+
+	bool m_isAlreadyFinished;
+
+    const char* getNextMesssageForAssistantController(DialogUXState newState);
+
 };
 
 }  // namespace sampleApp

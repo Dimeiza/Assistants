@@ -27,7 +27,8 @@ PosixQueueManager::PosixQueueManager(std::shared_ptr<InteractionManager> interac
         ConsolePrinter::simplePrint("MessageQueue open error.");
     }
 
-    m_previousState = DialogUXState::IDLE;
+    m_isAlreadyFinished = false;
+    m_state = DialogUXState::IDLE;
 
 }
 
@@ -61,29 +62,88 @@ void PosixQueueManager::send(const char *buff,ssize_t len){
 
 void PosixQueueManager::onDialogUXStateChanged(DialogUXState newState){
 
-    switch (newState) {
-        case DialogUXState::IDLE:
-            if(m_previousState != DialogUXState::IDLE){
-                send(finish,strlen(finish));
-            }
-            m_previousState = newState;
-            break;
-        case DialogUXState::LISTENING:
-            m_previousState = newState;
-            break;
-        case DialogUXState::THINKING:
-        	send(think,strlen(think));
-            m_previousState = newState;
-            break;
-        case DialogUXState::SPEAKING:
-         	send(speak,strlen(speak));
-            m_previousState = newState;
-            break;
-        case DialogUXState::FINISHED:
-            break;
-    }
-    
+
+//	switch(m_state){
+//		case DialogUXState::IDLE:
+//			ConsolePrinter::simplePrint("m_state:DialogUXState::IDLE");
+//			break;
+//		case DialogUXState::LISTENING:
+//			ConsolePrinter::simplePrint("m_state:DialogUXState::LISTENING");
+//			break;
+//		case DialogUXState::THINKING:
+//			ConsolePrinter::simplePrint("m_state:DialogUXState::THINKING");
+//			break;
+//		case DialogUXState::SPEAKING:
+//			ConsolePrinter::simplePrint("m_state:DialogUXState::SPEAKING");
+//			break;
+//		case DialogUXState::FINISHED:
+//			ConsolePrinter::simplePrint("m_state:DialogUXState::FINISHED");
+//			break;
+//	}
+//
+//    switch (newState) {
+//    	case DialogUXState::IDLE:
+//            ConsolePrinter::simplePrint("newState:DialogUXState::IDLE");
+//            break;
+//        case DialogUXState::LISTENING:
+//            ConsolePrinter::simplePrint("newState:DialogUXState::LISTENING");
+//            break;
+//        case DialogUXState::THINKING:
+//            ConsolePrinter::simplePrint("newState:DialogUXState::THINKING");
+//            break;
+//        case DialogUXState::SPEAKING:
+//            ConsolePrinter::simplePrint("newState:DialogUXState::SPEAKING");
+//            break;
+//        case DialogUXState::FINISHED:
+//            ConsolePrinter::simplePrint("newState:DialogUXState::FINISHED");
+//            break;
+//    }
+
+
+	const char * nextMessage = getNextMesssageForAssistantController(newState);
+
+	if(nextMessage != NULL){
+        send(nextMessage,strlen(nextMessage));
+	}
+
+	m_state = newState;
+
 }
+const char* PosixQueueManager::getNextMesssageForAssistantController(DialogUXState newState){
+
+	switch(m_state){
+	case DialogUXState::IDLE:
+		if(newState == DialogUXState::SPEAKING){
+			m_isAlreadyFinished = true;
+		}
+		break;
+	case DialogUXState::LISTENING:
+		if(newState == DialogUXState::THINKING){
+			return think;
+		}
+		break;
+	case DialogUXState::THINKING:
+		if(newState == DialogUXState::SPEAKING){
+			return speak;
+		}
+		if(newState == DialogUXState::IDLE){
+			return finish;
+		}
+		break;
+	case DialogUXState::SPEAKING:
+        if(newState == DialogUXState::IDLE && m_isAlreadyFinished != true){
+            	return finish;
+       	}
+   		m_isAlreadyFinished = false;
+		break;
+    case DialogUXState::FINISHED:
+    	break;
+	}
+
+	return NULL;
+
+}
+
 
 void PosixQueueManager::run() {
 
