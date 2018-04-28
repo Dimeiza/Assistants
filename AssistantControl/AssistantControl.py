@@ -46,17 +46,32 @@ def google_callback():
 def communicateAssistant(led,messageQueue):
 
     led.wakeup()
+
+    # remove a messages of queue if have a message before Assistantcotrol sends wakeup to Assistant
+    # (status synchronization)
+    if assistantsControl_mq.current_messages != 0:
+        # print('assistantsControl_mq is not empty')
+        while assistantsControl_mq.current_messages != 0:
+            msg = assistantsControl_mq.receive(timeout=3)
+            # print(msg)
+
     print('wakeup')
     messageQueue.send('wakeup')
     
+
     while True:
-        msg = assistantsControl_mq.receive()
-        if msg[0] == b'finish':
+        try:
+            # receive with timeout. 
+            # If Assistant already finished. Assistant controller receives no message from Assistant and finishes after timeout.
+            msg = assistantsControl_mq.receive(timeout=15)
+            if msg[0] == b'finish':
+                break
+            elif msg[0] == b'speak':
+                led.speak()
+            elif msg[0] == b'think':
+                led.think()
+        except posix_ipc.BusyError:
             break
-        elif msg[0] == b'speak':
-            led.speak()
-        elif msg[0] == b'think':
-            led.think()
     sleep(0.5)
     led.off()
 
