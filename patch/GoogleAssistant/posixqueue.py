@@ -122,6 +122,7 @@ class SampleAssistant(object):
         """
         continue_conversation = False
         device_actions_futures = []
+        isAudioRequestFinished = False
 
         self.conversation_stream.start_recording()
         logging.info('Recording audio request.')
@@ -141,13 +142,15 @@ class SampleAssistant(object):
                 logging.info('End of audio request detected')
                 self.conversation_stream.stop_recording()
                 asssitantControl_mq.send('think')
+                isAudioRequestFinished = True
 
                 
             if resp.speech_results:
-                logging.info('Transcript of user request: "%s".',
-                             ' '.join(r.transcript
-                                      for r in resp.speech_results))
-                logging.info('Playing assistant response.')
+                if isAudioRequestFinished == True:
+                    logging.info('Transcript of user request: "%s".',
+                                 ' '.join(r.transcript
+                                          for r in resp.speech_results))
+                    logging.info('Playing assistant response.')
             if len(resp.audio_out.audio_data) > 0:
                 self.conversation_stream.write(resp.audio_out.audio_data)
             if resp.dialog_state_out.conversation_state:
@@ -164,7 +167,7 @@ class SampleAssistant(object):
             elif resp.dialog_state_out.microphone_mode == CLOSE_MICROPHONE:
                 continue_conversation = False
                 logging.info('close microphone')
-
+                sleep(1)
                 asssitantControl_mq.send('speak')
 
             if resp.device_action.device_request_json:
