@@ -1,4 +1,4 @@
-# AssistantControl(Tentative name)
+# AssistantControl
 
 Tools to assist when run Alexa and Google Assistant at the same time on Raspberry Pi(with Respeaker 2mic/4mic).
 
@@ -303,6 +303,26 @@ In this case, this problem may be solved if you execute this command.
 ```
 sudo rm /dev/mqueue/*
 ```
+
+### Google Assistant in Pi Zero with Respeaker 2-Mic stops sometimes during speak response.
+
+You may be able to cope with this problem by following procedure(But if you can't understand a mechanism of following procedure, I don't recommend it.You should try other method).
+
+1. Set .asoundrc.
+   * You can refer asoundrc of this repository(misc/PiZeroRespeaker2) and edit your .asoundrc, or you can copy it to your home folder.
+   * Be careful DeviceNo in .asoundrc. This file has been set it "hw:0,0". You have to check DeviceNo of your Respeaker 2-Mic in your PiZero by executing these command, and adjust it.
+```
+arecord -l
+aplay -l
+``` 
+2. Overclocking 
+   * set /boot/config.txt for overclocking. You can refer or copy config.txt of this repository(misc/PiZeroRespeaker2).
+3. Don't use VNC.
+   * I recommend that you use ssh or directly to operate Pi Zero instead of using VNC.
+
+In this condition, Try to run Google Assistant and AssistantController, You may can be stable Google Assistant.
+
+Even if I investigate, I haven't found a root cause of this problem. There is a possibility that Google Assistant(or sound driver it uses) can't process response sounddata properly because Pi Zero don't have enough CPU power or network capacity.
 
 ## dependency 
 
