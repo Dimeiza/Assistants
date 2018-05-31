@@ -8,10 +8,8 @@ read -r -p "Your credentiail JSON filename:" credentialfilename
 echo ""
 read -r -p "Your Google Cloud Console Project-Id: " projectid
 echo ""
-read -r -p "Product Name of your device:" productname
+read -r -p "Device Model ID of your device:" modelid
 echo ""
-
-modelid=$projectid-$(date +%Y%m%d%H%M%S )
 
 # for google Assistant
 sudo apt-get -y install python3-dev python3-venv # Use python3.4-venv if the package cannot be found.
@@ -28,9 +26,6 @@ python -m pip install --upgrade google-assistant-sdk[samples]
 python -m pip install --upgrade google-auth-oauthlib[tool]
 
 google-oauthlib-tool --client-secrets "$CURRENT_DIR/$credentialfilename" --scope https://www.googleapis.com/auth/assistant-sdk-prototype --save --headless
-googlesamples-assistant-devicetool register-model --manufacturer "Raspberry Pi Foundation" --product-name $productname --type LIGHT --model $modelid
-
-echo "Testing the installed google assistant. Make a note of the generated Device-Id"
 
 python -m pip install posix_ipc
 
