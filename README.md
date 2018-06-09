@@ -116,8 +116,8 @@ bash setup.sh config.txt
 
     * You need these information.
         * Credential JSON file.
-        * Your project name.
-        * Product name.
+        * Your project ID.
+        * Device model ID.
 
 2. Run this command.
 
@@ -130,7 +130,7 @@ bash GoogleAssistant.sh
 ```
 Your credentiail JSON filename:
 Your Google Cloud Console Project-Id:
-Product Name of your device:
+Device Model ID of your device:
 ```
 
 4. Wait to finish script.
