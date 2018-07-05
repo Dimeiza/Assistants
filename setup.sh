@@ -200,7 +200,7 @@ then
 
     cp patch/Alexa/diff.patch avs-device-sdk/
     cd avs-device-sdk
-    patch -p0 < diff.patch
+    patch -p1 < diff.patch
     cd ..
 
     # make the SDK
