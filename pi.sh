@@ -35,7 +35,6 @@ install_dependencies() {
 }
 
 run_os_specifics() {
-  build_kwd_engine
   configure_sound
 }
 
