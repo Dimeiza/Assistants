@@ -41,11 +41,13 @@ DB_PATH="$INSTALL_BASE/$DB_FOLDER"
 CONFIG_DB_PATH="$DB_PATH"
 UNIT_TEST_MODEL_PATH="$INSTALL_BASE/avs-device-sdk/KWD/inputs/SensoryModels/"
 UNIT_TEST_MODEL="$THIRD_PARTY_PATH/alexa-rpi/models/spot-alexa-rpi-31000.snsr"
-CONFIG_FILE="$BUILD_PATH/Integration/AlexaClientSDKConfig.json"
+INPUT_CONFIG_FILE="$SOURCE_PATH/avs-device-sdk/Integration/AlexaClientSDKConfig.json"
+OUTPUT_CONFIG_FILE="$BUILD_PATH/Integration/AlexaClientSDKConfig.json"
+TEMP_CONFIG_FILE="$BUILD_PATH/Integration/tmp_AlexaClientSDKConfig.json"
 TEST_SCRIPT="$INSTALL_BASE/test.sh"
 LIB_SUFFIX="a"
-START_SCRIPT="$INSTALL_BASE/startsample.sh"
-GSTREAMER_AUDIO_SINK="alsasink"
+
+GSTREAMER_AUDIO_SINK="autoaudiosink"
 
 get_platform() {
   uname_str=`uname -a`
@@ -61,25 +63,19 @@ get_platform() {
   fi
 }
 
-# get_platform
-# PLATFORM=$result
-# 
-# if [ "$PLATFORM" == "pi" ]
-# then
-# source pi.sh
-# elif [ "$PLATFORM" == "mingw64" ]
-# then
-#   source mingw.sh
-# else
-#   echo "The installation script doesn't support current system. (System: $(uname -a))"
-#   exit 1
-# fi
+get_platform
+PLATFORM=$result
 
-install_dependencies() {
-  sudo apt-get update
-  sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
-  pip install flask commentjson
-}
+if [ "$PLATFORM" == "pi" ]
+then
+  source pi.sh
+elif [ "$PLATFORM" == "mingw64" ]
+then
+  source mingw.sh
+else
+  echo "The installation script doesn't support current system. (System: $(uname -a))"
+  exit 1
+fi
 
 echo "################################################################################"
 echo "################################################################################"
@@ -187,7 +183,7 @@ then
     ./configure --without-jack
     make
 
-#    run_os_specifics
+    run_os_specifics
 
     #get sdk 
     echo
@@ -195,16 +191,17 @@ then
     echo
 
     cd $SOURCE_PATH
-    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.7
+    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.8
+    
 
     # patch the SampleApp 
-    patch -u avs-device-sdk/SampleApp/src/SampleApplication.cpp < patch/Alexa/SampleApplication.cpp.patch
-    patch -u avs-device-sdk/SampleApp/src/CMakeLists.txt < patch/Alexa/CMakeLists.txt.patch
-    patch -u avs-device-sdk/SampleApp/include/SampleApp/SampleApplication.h < patch/Alexa/SampleApplication.h.patch
-    patch -u avs-device-sdk/SampleApp/src/UserInputManager.cpp < patch/Alexa/UserInputManager.cpp.patch
-
     cp patch/Alexa/PosixQueueManager.cpp avs-device-sdk/SampleApp/src/
     cp patch/Alexa/PosixQueueManager.h avs-device-sdk/SampleApp/include/SampleApp/
+
+    cp patch/Alexa/diff.patch avs-device-sdk/
+    cd avs-device-sdk
+    patch -p0 < diff.patch
+    cd ..
 
     # make the SDK
     echo
@@ -213,73 +210,91 @@ then
 
     cd $BUILD_PATH
     cmake "$SOURCE_PATH/avs-device-sdk" \
+    "${CMAKE_PLATFORM_SPECIFIC[@]}" \
     -DGSTREAMER_MEDIA_PLAYER=ON -DPORTAUDIO=ON \
     -DPORTAUDIO_LIB_PATH="$THIRD_PARTY_PATH/portaudio/lib/.libs/libportaudio.$LIB_SUFFIX" \
     -DPORTAUDIO_INCLUDE_DIR="$THIRD_PARTY_PATH/portaudio/include" \
     -DCMAKE_BUILD_TYPE=DEBUG
 
     cd $BUILD_PATH
-    make SampleApp -j1
+    make SampleApp -j2
 
 else
     cd $BUILD_PATH
-    make SampleApp -j1
+    make SampleApp -j2
 fi
 
 echo
 echo "==============> SAVING CONFIGURATION FILE =============="
 echo
 
-cat << EOF > "$CONFIG_FILE"
-{
-    "alertsCapabilityAgent":{
-        "databaseFilePath":"$CONFIG_DB_PATH/alerts.db"
-    },
-    "certifiedSender":{
-        "databaseFilePath":"$CONFIG_DB_PATH/certifiedSender.db"
-    },
-    "settings":{
-        "databaseFilePath":"$CONFIG_DB_PATH/settings.db",
-        "defaultAVSClientSettings":{
-            "locale":"$LOCALE"
-        }
-    },
-    "notifications":{
-        "databaseFilePath":"$CONFIG_DB_PATH/notifications.db"
-    },
-    "cblAuthDelegate":{
-        "databaseFilePath":"$CONFIG_DB_PATH/cblAuthDelegate.db"
-    },
-    "deviceInfo":{
-        "clientId":"$CLIENT_ID",
-        "deviceSerialNumber":"$DEVICE_SERIAL_NUMBER",
-        "productId":"$PRODUCT_ID"
-    },
-    "dcfDelegate":{
-    },
-    "miscDatabase":{
-        "databaseFilePath":"$CONFIG_DB_PATH/miscDatabase.db"
-    },
+# Set variables for configuration file
+
+# Variables for cblAuthDelegate
+SDK_CBL_AUTH_DELEGATE_DATABASE_FILE_PATH=$CONFIG_DB_PATH/cblAuthDelegate.db
+
+# Variables for deviceInfo
+SDK_CONFIG_DEVICE_SERIAL_NUMBER=$DEVICE_SERIAL_NUMBER
+SDK_CONFIG_CLIENT_ID=$CLIENT_ID
+SDK_CONFIG_PRODUCT_ID=$PRODUCT_ID
+
+# Variables for miscDatabase
+SDK_MISC_DATABASE_FILE_PATH=$CONFIG_DB_PATH/miscDatabase.db
+
+# Variables for alertsCapabilityAgent
+SDK_SQLITE_DATABASE_FILE_PATH=$CONFIG_DB_PATH/alerts.db
+
+# Variables for settings
+SDK_SQLITE_SETTINGS_DATABASE_FILE_PATH=$CONFIG_DB_PATH/settings.db
+SETTING_LOCALE_VALUE=$LOCALE
+
+# Variables for bluetooth
+SDK_BLUETOOTH_DATABASE_FILE_PATH=$CONFIG_DB_PATH/bluetooth.db
+
+# Variables for certifiedSender
+SDK_CERTIFIED_SENDER_DATABASE_FILE_PATH=$CONFIG_DB_PATH/certifiedSender.db
+
+# Variables for notifications
+SDK_NOTIFICATIONS_DATABASE_FILE_PATH=$CONFIG_DB_PATH/notifications.db
+
+# Create configuration file with audioSink configuration at the beginning of the file
+cat << EOF > "$OUTPUT_CONFIG_FILE"
+ {
     "gstreamerMediaPlayer":{
         "audioSink":"$GSTREAMER_AUDIO_SINK"
-    }
-}
+    },
 EOF
+
+# Check if temporary file exists
+if [ -f $TEMP_CONFIG_FILE ]; then
+  rm $TEMP_CONFIG_FILE
+fi
+
+# Create temporary configuration file with variables filled out
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]]; do
+        LHS=${BASH_REMATCH[1]}
+        RHS="$(eval echo "\"$LHS\"")"
+        line=${line//$LHS/$RHS}
+    done
+    echo "$line" >> $TEMP_CONFIG_FILE
+done < $INPUT_CONFIG_FILE
+
+# Delete first line from temp file to remove opening bracket
+sed -i -e "1d" $TEMP_CONFIG_FILE
+
+# Append temp file to configuration file
+cat $TEMP_CONFIG_FILE >> $OUTPUT_CONFIG_FILE
+
+# Delete temp file
+rm $TEMP_CONFIG_FILE
 
 echo
 echo "==============> FINAL CONFIGURATION  =============="
 echo
-cat $CONFIG_FILE
+cat $OUTPUT_CONFIG_FILE
 
-# generate_start_script
-
-cat << EOF > "$START_SCRIPT"
-#!/bin/bash
-cd "$BUILD_PATH/SampleApp/src"
-./SampleApp "$CONFIG_FILE" "$THIRD_PARTY_PATH/snowboy/resources" INFO
-EOF
-
-chmod +x "$START_SCRIPT"
+generate_start_script
 
 cat << EOF > "$TEST_SCRIPT" 
 echo
@@ -289,7 +304,6 @@ mkdir -p "$UNIT_TEST_MODEL_PATH"
 cp "$UNIT_TEST_MODEL" "$UNIT_TEST_MODEL_PATH"
 cd $BUILD_PATH
 make all test -j2
-
 chmod +x "$START_SCRIPT"
 EOF
 
