@@ -58,9 +58,6 @@ configure_sound() {
 EOF
 }
 
-build_kwd_engine() {
-}
-
 generate_start_script() {
   cat << EOF > "$START_SCRIPT"
   cd "$BUILD_PATH/SampleApp/src"
