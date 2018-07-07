@@ -1,0 +1,101 @@
+diff --git a/SampleApp/include/SampleApp/SampleApplication.h b/SampleApp/include/SampleApp/SampleApplication.h
+index fc8005ee..0a57c075 100644
+--- a/SampleApp/include/SampleApp/SampleApplication.h
++++ b/SampleApp/include/SampleApp/SampleApplication.h
+@@ -22,7 +22,7 @@
+ 
+ #include "ConsolePrinter.h"
+ #include "UserInputManager.h"
+-
++#include "PosixQueueManager.h"
+ #ifdef KWD
+ #include <KWD/AbstractKeywordDetector.h>
+ #endif
+@@ -179,6 +179,8 @@ private:
+     /// The singleton map from @c playerId to @c ExternalMediaAdapter creation functions.
+     static capabilityAgents::externalMediaPlayer::ExternalMediaPlayer::AdapterCreationMap m_adapterToCreateFuncMap;
+ 
++    std::shared_ptr<PosixQueueManager> m_posixQueueManager;
++    
+ #ifdef KWD
+     /// The Wakeword Detector which can wake up the client using audio input.
+     std::unique_ptr<kwd::AbstractKeywordDetector> m_keywordDetector;
+diff --git a/SampleApp/src/CMakeLists.txt b/SampleApp/src/CMakeLists.txt
+index b4157bbc..3ba6bb40 100644
+--- a/SampleApp/src/CMakeLists.txt
++++ b/SampleApp/src/CMakeLists.txt
+@@ -9,7 +9,9 @@ list(APPEND SampleApp_SOURCES
+     UIManager.cpp
+     UserInputManager.cpp
+     SampleApplication.cpp
+-    main.cpp)
++    main.cpp
++    PosixQueueManager.cpp
++    )
+ 
+ IF (HAS_EXTERNAL_MEDIA_PLAYER_ADAPTERS)
+     file(GLOB_RECURSE SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalMediaAdapterRegistration/*.cpp)
+diff --git a/SampleApp/src/SampleApplication.cpp b/SampleApp/src/SampleApplication.cpp
+index 7d66de57..985e6165 100644
+--- a/SampleApp/src/SampleApplication.cpp
++++ b/SampleApp/src/SampleApplication.cpp
+@@ -190,6 +190,9 @@ SampleApplication::MediaPlayerRegistration::MediaPlayerRegistration(
+ }
+ 
+ void SampleApplication::run() {
++    avsCommon::utils::threading::Executor executor;
++    executor.submit([this]() { m_posixQueueManager->run(); });
++
+     m_userInputManager->run();
+ }
+ 
+@@ -465,6 +468,8 @@ bool SampleApplication::initialize(
+         return false;
+     }
+ 
++ 
++        
+     authDelegate->addAuthObserver(userInterfaceManager);
+     m_capabilitiesDelegate->addCapabilitiesObserver(userInterfaceManager);
+ 
+@@ -539,7 +544,6 @@ bool SampleApplication::initialize(
+     client->addSpeakerManagerObserver(userInterfaceManager);
+ 
+     client->addNotificationsObserver(userInterfaceManager);
+-
+     /*
+      * Add GUI Renderer as an observer if display cards are supported.
+      */
+@@ -672,7 +676,10 @@ bool SampleApplication::initialize(
+         ACSDK_CRITICAL(LX("Failed to create UserInputManager!"));
+         return false;
+     }
+-
++    m_posixQueueManager = alexaClientSDK::sampleApp::PosixQueueManager::create(m_interactionManager);
++    client->addAlexaDialogStateObserver(m_posixQueueManager);
++ 
++        
+     authDelegate->addAuthObserver(m_userInputManager);
+     m_capabilitiesDelegate->addCapabilitiesObserver(m_userInputManager);
+     m_capabilitiesDelegate->addCapabilitiesObserver(client);
+diff --git a/SampleApp/src/UserInputManager.cpp b/SampleApp/src/UserInputManager.cpp
+index 0aee3245..6d0480ed 100644
+--- a/SampleApp/src/UserInputManager.cpp
++++ b/SampleApp/src/UserInputManager.cpp
+@@ -20,7 +20,7 @@
+ #include <AVSCommon/Utils/String/StringUtils.h>
+ #include "SampleApp/UserInputManager.h"
+ #include "SampleApp/ConsolePrinter.h"
+-
++#include "unistd.h"
+ namespace alexaClientSDK {
+ namespace sampleApp {
+ 
+@@ -227,6 +227,7 @@ void UserInputManager::run() {
+ #endif
+         } else {
+             m_interactionManager->errorValue();
++            usleep(500 * 1000);
+         }
+     }
+ }
