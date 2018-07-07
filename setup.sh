@@ -217,11 +217,11 @@ then
     -DCMAKE_BUILD_TYPE=DEBUG
 
     cd $BUILD_PATH
-    make SampleApp -j2
+    make SampleApp -j1
 
 else
     cd $BUILD_PATH
-    make SampleApp -j2
+    make SampleApp -j1
 fi
 
 echo
@@ -303,7 +303,7 @@ echo
 mkdir -p "$UNIT_TEST_MODEL_PATH"
 cp "$UNIT_TEST_MODEL" "$UNIT_TEST_MODEL_PATH"
 cd $BUILD_PATH
-make all test -j2
+make all test -j1
 chmod +x "$START_SCRIPT"
 EOF
 
