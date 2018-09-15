@@ -191,7 +191,7 @@ then
     echo
 
     cd $SOURCE_PATH
-    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.8
+    git clone git://github.com/alexa/avs-device-sdk.git --branch v1.9
     
 
     # patch the SampleApp 
