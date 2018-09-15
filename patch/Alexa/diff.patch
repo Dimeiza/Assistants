@@ -80,7 +80,7 @@ index 4fba8ed39..b9cb7bb22 100644
      client->getRegistrationManager()->addObserver(m_userInputManager);
      m_capabilitiesDelegate->addCapabilitiesObserver(m_userInputManager);
 diff --git a/SampleApp/src/UserInputManager.cpp b/SampleApp/src/UserInputManager.cpp
-index c20011e57..a36b5197a 100644
+index c20011e57..0fb73cc1f 100644
 --- a/SampleApp/src/UserInputManager.cpp
 +++ b/SampleApp/src/UserInputManager.cpp
 @@ -20,7 +20,7 @@
@@ -92,10 +92,12 @@ index c20011e57..a36b5197a 100644
  namespace alexaClientSDK {
  namespace sampleApp {
  
-@@ -271,6 +271,7 @@ SampleAppReturnCode UserInputManager::run() {
+@@ -270,7 +270,8 @@ SampleAppReturnCode UserInputManager::run() {
+             }
  #endif
          } else {
-             m_interactionManager->errorValue();
+-            m_interactionManager->errorValue();
++           //  m_interactionManager->errorValue();
 +            usleep(500 * 1000);
          }
      }
