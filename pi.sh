@@ -60,9 +60,9 @@ EOF
 
 generate_start_script() {
   cat << EOF > "$START_SCRIPT"
-  cd "$BUILD_PATH/SampleApp/src"
-
- ./SampleApp "$OUTPUT_CONFIG_FILE" INFO
+#!/bin/sh
+cd "$BUILD_PATH/SampleApp/src"
+./SampleApp "$OUTPUT_CONFIG_FILE" INFO
 EOF
   chmod +x "$START_SCRIPT"
 }
