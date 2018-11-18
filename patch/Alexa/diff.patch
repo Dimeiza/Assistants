@@ -1,17 +1,17 @@
 diff --git a/SampleApp/include/SampleApp/SampleApplication.h b/SampleApp/include/SampleApp/SampleApplication.h
-index 74c6a4498..9adcae1a0 100644
+index 6e95c4502..7fe17d414 100644
 --- a/SampleApp/include/SampleApp/SampleApplication.h
 +++ b/SampleApp/include/SampleApp/SampleApplication.h
-@@ -27,6 +27,8 @@
+@@ -28,6 +28,8 @@
+ #include "SampleApplicationReturnCodes.h"
  #include "UserInputManager.h"
- #include "SampleApp/GuiRenderer.h"
  
 +#include "PosixQueueManager.h"
 +
  #ifdef KWD
  #include <KWD/AbstractKeywordDetector.h>
  #endif
-@@ -221,6 +223,8 @@ private:
+@@ -227,6 +229,8 @@ private:
      /// The singleton map from @c playerId to @c ExternalMediaAdapter creation functions.
      static capabilityAgents::externalMediaPlayer::ExternalMediaPlayer::AdapterCreationMap m_adapterToCreateFuncMap;
  
@@ -21,25 +21,24 @@ index 74c6a4498..9adcae1a0 100644
      /// The Wakeword Detector which can wake up the client using audio input.
      std::unique_ptr<kwd::AbstractKeywordDetector> m_keywordDetector;
 diff --git a/SampleApp/src/CMakeLists.txt b/SampleApp/src/CMakeLists.txt
-index c2cb865c9..ddea284a3 100644
+index 44b8291e6..ec7255bce 100644
 --- a/SampleApp/src/CMakeLists.txt
 +++ b/SampleApp/src/CMakeLists.txt
-@@ -9,7 +9,9 @@ list(APPEND SampleApp_SOURCES
-     UIManager.cpp
+@@ -10,7 +10,8 @@ list(APPEND SampleApp_SOURCES
      UserInputManager.cpp
      SampleApplication.cpp
+     SampleEqualizerModeController.cpp
 -    main.cpp)
 +    main.cpp
-+    PosixQueueManager.cpp
-+    )
++    PosixQueueManager.cpp)
  
  if (PORTAUDIO)
      list(APPEND SampleApp_SOURCES PortAudioMicrophoneWrapper.cpp)
 diff --git a/SampleApp/src/SampleApplication.cpp b/SampleApp/src/SampleApplication.cpp
-index 4fba8ed39..b9cb7bb22 100644
+index 61439eea9..59a9c9384 100644
 --- a/SampleApp/src/SampleApplication.cpp
 +++ b/SampleApp/src/SampleApplication.cpp
-@@ -217,6 +217,10 @@ SampleApplication::MediaPlayerRegistration::MediaPlayerRegistration(
+@@ -235,6 +235,10 @@ SampleApplication::MediaPlayerRegistration::MediaPlayerRegistration(
  }
  
  SampleAppReturnCode SampleApplication::run() {
@@ -50,7 +49,7 @@ index 4fba8ed39..b9cb7bb22 100644
      return m_userInputManager->run();
  }
  
-@@ -509,6 +513,8 @@ bool SampleApplication::initialize(
+@@ -559,6 +563,8 @@ bool SampleApplication::initialize(
          return false;
      }
  
@@ -59,7 +58,7 @@ index 4fba8ed39..b9cb7bb22 100644
      authDelegate->addAuthObserver(userInterfaceManager);
      m_capabilitiesDelegate->addCapabilitiesObserver(userInterfaceManager);
  
-@@ -583,7 +589,6 @@ bool SampleApplication::initialize(
+@@ -661,7 +667,6 @@ bool SampleApplication::initialize(
      client->addSpeakerManagerObserver(userInterfaceManager);
  
      client->addNotificationsObserver(userInterfaceManager);
@@ -67,7 +66,7 @@ index 4fba8ed39..b9cb7bb22 100644
      /*
       * Add GUI Renderer as an observer if display cards are supported.
       */
-@@ -724,7 +729,10 @@ bool SampleApplication::initialize(
+@@ -809,7 +814,10 @@ bool SampleApplication::initialize(
          ACSDK_CRITICAL(LX("Failed to create UserInputManager!"));
          return false;
      }
@@ -80,7 +79,7 @@ index 4fba8ed39..b9cb7bb22 100644
      client->getRegistrationManager()->addObserver(m_userInputManager);
      m_capabilitiesDelegate->addCapabilitiesObserver(m_userInputManager);
 diff --git a/SampleApp/src/UserInputManager.cpp b/SampleApp/src/UserInputManager.cpp
-index c20011e57..0fb73cc1f 100644
+index 73aca2d1e..f8cf1a29f 100644
 --- a/SampleApp/src/UserInputManager.cpp
 +++ b/SampleApp/src/UserInputManager.cpp
 @@ -20,7 +20,7 @@
@@ -92,7 +91,7 @@ index c20011e57..0fb73cc1f 100644
  namespace alexaClientSDK {
  namespace sampleApp {
  
-@@ -270,7 +270,8 @@ SampleAppReturnCode UserInputManager::run() {
+@@ -275,7 +275,8 @@ SampleAppReturnCode UserInputManager::run() {
              }
  #endif
          } else {

@@ -118,6 +118,7 @@ const char* PosixQueueManager::getNextMesssageForAssistantController(DialogUXSta
 		}
 		break;
 	case DialogUXState::LISTENING:
+	case DialogUXState::EXPECTING:		
 		if(newState == DialogUXState::THINKING){
 			return think;
 		}
