@@ -30,11 +30,12 @@ GSTREAMER_AUDIO_SINK="alsasink"
 
 install_dependencies() {
   sudo apt-get update
-  sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
+  sudo apt-get -y install git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libssl1.0-dev libfaad-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-good libasound2-dev sox gedit vim python3-pip
   pip install flask commentjson
 }
 
 run_os_specifics() {
+  build_port_audio
   configure_sound
 }
 
@@ -60,9 +61,8 @@ EOF
 
 generate_start_script() {
   cat << EOF > "$START_SCRIPT"
-#!/bin/sh
-cd "$BUILD_PATH/SampleApp/src"
+  cd "$BUILD_PATH/SampleApp/src"
+
 ./SampleApp "$OUTPUT_CONFIG_FILE" INFO
 EOF
-  chmod +x "$START_SCRIPT"
 }

@@ -57,15 +57,7 @@ index 61439eea9..59a9c9384 100644
 +        
      authDelegate->addAuthObserver(userInterfaceManager);
      m_capabilitiesDelegate->addCapabilitiesObserver(userInterfaceManager);
- 
-@@ -661,7 +667,6 @@ bool SampleApplication::initialize(
-     client->addSpeakerManagerObserver(userInterfaceManager);
- 
-     client->addNotificationsObserver(userInterfaceManager);
--
-     /*
-      * Add GUI Renderer as an observer if display cards are supported.
-      */
+
 @@ -809,7 +814,10 @@ bool SampleApplication::initialize(
          ACSDK_CRITICAL(LX("Failed to create UserInputManager!"));
          return false;
