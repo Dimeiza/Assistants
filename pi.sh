@@ -61,6 +61,7 @@ EOF
 
 generate_start_script() {
   cat << EOF > "$START_SCRIPT"
+  #!/bin/bash
   cd "$BUILD_PATH/SampleApp/src"
 
 ./SampleApp "$OUTPUT_CONFIG_FILE" INFO
