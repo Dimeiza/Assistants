@@ -86,7 +86,7 @@ git clone https://github.com/Dimeiza/Assistants.git
 4. Into Assistants folder, and run this command.
 
 ```
-cd Assisntants
+cd Assistants
 ```
 
 5. Get your config.json from Amazon Developer Portal, see https://github.com/alexa/avs-device-sdk/wiki/Create-Security-Profile#create-a-security-profile.
