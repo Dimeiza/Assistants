@@ -128,7 +128,7 @@ bash setup.sh config.json -s 998987
 2. Run this command.
 
 ```
-bash GoogleAssistant.sh
+bash GoogleAssistant_setup.sh
 ```
 
 3. Follow the prompt instructions to input registered information.
