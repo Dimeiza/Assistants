@@ -147,15 +147,15 @@ Device Model ID of your device:
 
 ReSpeaker 2-Mics Pi HAT
 ```
-bash Respeaker2Mic.sh
+bash Respeaker2Mic_setup.sh
 ```
 
 ReSpeaker 4-Mic Array for Raspberry Pi
 ```
-bash Respeaker4Mic.sh
+bash Respeaker4Mic_setup.sh
 ```
 
-2. After script finished, configure SPI to be enable and reboot.
+2. After script finished, configure SPI to be enable.
 
 ```
 1. Run "sudo raspi-config".
@@ -213,7 +213,7 @@ This Alexa can control with keyboard. If you needed, you can change a language A
 
 ```
 cd Assistants
-./startGoogleAssistants.sh
+./startGoogleAssistant.sh
 ```
 
 After several seconds, Google Assistant is booted. 
