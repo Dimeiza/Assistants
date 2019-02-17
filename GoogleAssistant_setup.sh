@@ -45,7 +45,7 @@ chmod +x startGoogleAssistant.sh
 echo "================================================================"
 echo 'Install finished.'
 echo 'You can run Google Assistant hotword sample following command.'
-echo '"./startGoogleAssisntant.sh"'
+echo '"./startGoogleAssistant.sh"'
 echo "================================================================"
 
 
