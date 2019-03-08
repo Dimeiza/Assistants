@@ -147,12 +147,12 @@ Device Model ID of your device:
 
 ReSpeaker 2-Mics Pi HAT
 ```
-bash Respeaker2Mic_setup.sh
+bash Respeaker2Mic_Setup.sh
 ```
 
 ReSpeaker 4-Mic Array for Raspberry Pi
 ```
-bash Respeaker4Mic_setup.sh
+bash Respeaker4Mic_Setup.sh
 ```
 
 2. After script finished, configure SPI to be enable.
@@ -171,7 +171,7 @@ bash Respeaker4Mic_setup.sh
 1. Run This command.
 
 ```
-setupAssistantControl.sh
+bash setupAssistantControl.sh
 ```
 
 2. Modify AssistantControl/AssistantControl.py as following to match your ReSpeaker.
