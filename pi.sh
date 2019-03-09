@@ -66,4 +66,5 @@ generate_start_script() {
 
 ./SampleApp "$OUTPUT_CONFIG_FILE" INFO
 EOF
+  chmod +x "$START_SCRIPT"
 }
