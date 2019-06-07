@@ -229,7 +229,7 @@ then
     echo
 
     cd $SOURCE_PATH
-    git clone --single-branch $CLONE_URL avs-device-sdk --branch v1.12
+    git clone --single-branch $CLONE_URL avs-device-sdk --branch v1.13
   fi
 
     # patch the SampleApp 
