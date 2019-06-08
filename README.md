@@ -46,6 +46,10 @@ Raspberry Pi 3A+ with ReSpeaker 4-Mic Array
 
 https://www.youtube.com/watch?v=wH6oOzjj26o
 
+Raspberry Pi 3B With ReSpeaker 6-Mic Circular Array kit for Raspberry Pi
+
+https://www.youtube.com/watch?v=ja3NCrgnNSk
+
 ## VS. 
 
 If you only want to run both assistant simultaneously and you don't have ReSpeaker, you can use [AssistantPi](https://github.com/xtools-at/AssistantPi) instead of this tool.
@@ -68,7 +72,9 @@ You need:
 
     * [ReSpeaker 4-Mic Array for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html)
 
-5. USB Sound Output(Iecommended: if you use Respeaker 4-Mic).
+    * [ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-6-Mic-Circular-Array-Kit-for-Raspberry-Pi.html)
+
+5. USB Sound Output(I recommended: if you use Respeaker 4-Mic).
     * [For example](https://www.amazon.co.uk/TechRise-External-Aluminum-Headphone-Microphone/dp/B0789CN8CT)
     * I seem it is stabler than builtin(bcm2835) sound output.
 
@@ -159,7 +165,7 @@ ReSpeaker 2-Mics Pi HAT
 bash Respeaker2Mic_Setup.sh
 ```
 
-ReSpeaker 4-Mic Array for Raspberry Pi
+ReSpeaker 4-Mic Array for Raspberry Pi or ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
 ```
 bash Respeaker4Mic_Setup.sh
 ```
@@ -193,7 +199,7 @@ from mic_hat import alexa_led_pattern
 from mic_hat import google_home_led_pattern
 ```
 
-* ReSpeaker 4-Mic Array for Raspberry Pi
+* ReSpeaker 4-Mic Array for Raspberry Pi or ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
 
 ``` 
 from mic_hat_4 import pixels
