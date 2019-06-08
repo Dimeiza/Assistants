@@ -34,13 +34,17 @@ This tool/scripts features are:
 
 ## Demo
 
-Rapsberry Pi Zero + ReSpeaker 2-Mics Pi HAT.
+Rapsberry Pi Zero with ReSpeaker 2-Mics Pi HAT.
 
 https://www.youtube.com/watch?v=P66bfCi45wE
 
-Raspberry Pi 3 + ReSpeaker 4-Mic Array
+Raspberry Pi 3B with ReSpeaker 4-Mic Array
 
 https://www.youtube.com/watch?v=WsatqjlLYls
+
+Raspberry Pi 3A+ with ReSpeaker 4-Mic Array
+
+https://www.youtube.com/watch?v=wH6oOzjj26o
 
 ## VS. 
 
@@ -49,17 +53,22 @@ If you only want to run both assistant simultaneously and you don't have ReSpeak
 ## Requirement
 
 You need:
-1. A Raspberry Pi 3 and SD card with a flesh install of Raspbian Stretch
+1. A Raspberry Pi. You can choose one in following.
+* Raspberry Pi3 B or B+
+* Raspberry Pi3 A+
+* Raspberry Pi Zero W(but so difficult to build)
 
-2. Audio peripherals:
+2. SD card with a flesh install of Raspbian Stretch
+
+3. Audio peripherals:
     * external speaker with 3.5mm Jack
 
-3. ReSpeaker
+4. ReSpeaker
     * [ReSpeaker 2-Mics Pi HAT](https://www.seeedstudio.com/ReSpeaker-2-Mics-Pi-HAT-p-2874.html) or
 
     * [ReSpeaker 4-Mic Array for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html)
 
-4. USB Sound Output(Iecommended: if you use Respeaker 4-Mic).
+5. USB Sound Output(Iecommended: if you use Respeaker 4-Mic).
     * [For example](https://www.amazon.co.uk/TechRise-External-Aluminum-Headphone-Microphone/dp/B0789CN8CT)
     * I seem it is stabler than builtin(bcm2835) sound output.
 
@@ -282,6 +291,16 @@ sudo bash UninstallService.sh
 ```
 
 ## Known Issue
+
+### Build an Alexa with Raspberry Pi3 A+
+
+When build Alexa with Raspberry Pi 3A+ , Build process sometimes stop in progress.
+
+If you find it, You probably solve this issue by increasing swap memory.
+
+https://www.bitpi.co/2015/02/11/how-to-change-raspberry-pis-swapfile-size-on-rasbian/
+
+After increasing swap, try build again.
 
 ### Issue of Google Assistant  
 
