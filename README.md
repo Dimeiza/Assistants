@@ -67,7 +67,7 @@ You need:
 3. Audio peripherals:
     * external speaker with 3.5mm Jack
 
-4. ReSpeaker
+4. ReSpeaker. You can choose one in following.
     * [ReSpeaker 2-Mics Pi HAT](https://www.seeedstudio.com/ReSpeaker-2-Mics-Pi-HAT-p-2874.html) or
 
     * [ReSpeaker 4-Mic Array for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html)
