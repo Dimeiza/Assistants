@@ -29,8 +29,8 @@ google-oauthlib-tool --client-secrets "$CURRENT_DIR/$credentialfilename" --scope
 
 python -m pip install posix_ipc
 
-cp patch/GoogleAssistant/posixqueue.py env/lib/python3.5/site-packages/googlesamples/assistant/grpc
-cp patch/GoogleAssistant/audio_helpers_for_queue.py env/lib/python3.5/site-packages/googlesamples/assistant/grpc
+cp patch/GoogleAssistant/posixqueue.py env/lib/python3.7/site-packages/googlesamples/assistant/grpc
+cp patch/GoogleAssistant/audio_helpers_for_queue.py env/lib/python3.7/site-packages/googlesamples/assistant/grpc
 cp patch/GoogleAssistant/googlesamples-assistant-posixqueue env/bin/
 chmod 755 env/bin/googlesamples-assistant-posixqueue
 
