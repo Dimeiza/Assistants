@@ -64,6 +64,13 @@ echo
 echo "==============> SAVING AUDIO CONFIGURATION FILE =============="
 echo
 
+cat << EOF > $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json
+  {
+    "gstreamerMediaPlayer":{
+        "audioSink":"alsasink"
+  },
+EOF
+
 cat << EOF > "$SOUND_CONFIG"
 pcm.!default {
   type asym
@@ -82,7 +89,7 @@ cat << EOF > "$START_SCRIPT"
 #!/bin/bash
 cd "$INSTALL_BASE/avs-device-sdk/sdk-build/"
 
-PA_ALSA_PLUGHW=1 ./SampleApp/src/SampleApp ./Integration/AlexaClientSDKConfig.json DEBUG9
+./SampleApp/src/SampleApp ./Integration/AlexaClientSDKConfig.json DEBUG9
 
 EOF
 chmod +x "$START_SCRIPT"
