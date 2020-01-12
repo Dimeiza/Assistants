@@ -44,19 +44,12 @@ cmake $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk \
 -DPORTAUDIO_LIB_PATH=$INSTALL_BASE/avs-device-sdk/third-party/portaudio/lib/.libs/libportaudio.a \
 -DPORTAUDIO_INCLUDE_DIR=$INSTALL_BASE/avs-device-sdk/third-party/portaudio/include
 
-make SampleApp 
+make SampleApp -j1
 
 cd $INSTALL_BASE
 cp config.json $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/tools/Install
 cd $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/tools/Install 
     
-bash genConfig.sh config.json 12345 \
- $INSTALL_BASE/avs-device-sdk/db \
- $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk \
- $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json \
- -DSDK_CONFIG_MANUFACTURER_NAME="raspberrypi" \
- -DSDK_CONFIG_DEVICE_DESCRIPTION="raspberrypi"
-
 SOUND_CONFIG="$HOME/.asoundrc"
 START_SCRIPT="$INSTALL_BASE/startsample.sh"
 
@@ -64,12 +57,14 @@ echo
 echo "==============> SAVING AUDIO CONFIGURATION FILE =============="
 echo
 
-cat << EOF > $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json
-  {
-    "gstreamerMediaPlayer":{
-        "audioSink":"alsasink"
-  },
-EOF
+bash genConfig.sh config.json 12345 \
+ $INSTALL_BASE/avs-device-sdk/db \
+ $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk \
+ $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json \
+ -DSDK_CONFIG_MANUFACTURER_NAME="raspberrypi" \
+ -DSDK_CONFIG_DEVICE_DESCRIPTION="raspberrypi"
+
+sed -i "2s/^/\n    \"gstreamerMediaPlayer\":{\n        \"audioSink\":\"alsasink\"\n    },\n/" $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json 
 
 cat << EOF > "$SOUND_CONFIG"
 pcm.!default {
