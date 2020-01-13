@@ -26,7 +26,7 @@ make
 pip install commentjson
 
 cd $INSTALL_BASE/avs-device-sdk/sdk-source
-git clone git://github.com/alexa/avs-device-sdk.git
+git clone git://github.com/alexa/avs-device-sdk.git --branch v1.17.0
 
 # patch the SampleApp 
 cp $INSTALL_BASE/patch/Alexa/PosixQueueManager.cpp $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/SampleApp/src/
