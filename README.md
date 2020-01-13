@@ -104,28 +104,15 @@ git clone https://github.com/Dimeiza/Assistants.git
 cd Assistants
 ```
 
-5. Get your config.json from Amazon Developer Portal, see https://github.com/alexa/avs-device-sdk/wiki/Create-Security-Profile#create-a-security-profile.
+5. Get your config.json from Amazon Developer Portal(see https://github.com/alexa/avs-device-sdk/wiki/Create-Security-Profile#create-a-security-profile) and copy it to the "Assistants" folder.
 
-6. Download getConfig.sh from AVS Device SDK repository.
-
-```
-wget https://raw.githubusercontent.com/alexa/avs-device-sdk/master/tools/Install/genConfig.sh
-```
-
-7. Run the setup script with your configuration as an argument:
+6. Run the setup script.
 
 ```
-bash setup.sh config.json
+bash AlexaSetup.sh
 ```
 
-   * You can supply a DSN in command line to change it.
-
-```
-bash setup.sh config.json -s 998987
-```
-
-8. Wait to finish script.
-
+7. Wait to finish script.
 
 ### Google Assistant setup
 
