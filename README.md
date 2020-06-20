@@ -109,7 +109,7 @@ cd Assistants
 6. Run the setup script.
 
 ```
-bash AlexaSetup.sh
+bash setupAlexa.sh
 ```
 
 7. Wait to finish script.
@@ -130,7 +130,7 @@ bash AlexaSetup.sh
 2. Run this command.
 
 ```
-bash GoogleAssistant_setup.sh
+bash setupGoogleAssistant.sh
 ```
 
 3. Follow the prompt instructions to input registered information.
@@ -149,12 +149,12 @@ Device Model ID of your device:
 
 ReSpeaker 2-Mics Pi HAT
 ```
-bash Respeaker2Mic_Setup.sh
+bash setupRespeaker2Mic.sh
 ```
 
 ReSpeaker 4-Mic Array for Raspberry Pi or ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
 ```
-bash Respeaker4Mic_Setup.sh
+bash setupRespeaker4Mic.sh
 ```
 
 2. After script finished, configure SPI to be enable.
