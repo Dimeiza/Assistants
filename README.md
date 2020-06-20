@@ -58,6 +58,8 @@ If you only want to run both assistant simultaneously and you don't have ReSpeak
 
 You need:
 1. A Raspberry Pi. You can choose one in following.
+
+* Raspberry Pi4
 * Raspberry Pi3 B or B+
 * Raspberry Pi3 A+
 * Raspberry Pi Zero W(but so difficult to build)
