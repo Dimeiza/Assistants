@@ -31,6 +31,8 @@ git clone git://github.com/alexa/avs-device-sdk.git --branch v1.19.0
 # patch the SampleApp 
 cp $INSTALL_BASE/patch/Alexa/PosixQueueManager.cpp $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/SampleApp/src/
 cp $INSTALL_BASE/patch/Alexa/PosixQueueManager.h $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/SampleApp/include/SampleApp/
+cp $INSTALL_BASE/patch/Alexa/HTMLRenderer.cpp $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/SampleApp/src/
+cp $INSTALL_BASE/patch/Alexa/HTMLRenderer.h $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/SampleApp/include/SampleApp/
 
 cp $INSTALL_BASE/patch/Alexa/diff.patch $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/
 cd $INSTALL_BASE/avs-device-sdk/sdk-source/avs-device-sdk/
