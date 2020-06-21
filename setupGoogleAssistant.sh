@@ -36,7 +36,7 @@ chmod 755 env/bin/googlesamples-assistant-posixqueue
 cat << EOF > "startGoogleAssistant.sh"
 #!/bin/bash
 source env/bin/activate
-googlesamples-assistant-posixqueue --project-id $projectid --device-model-id $modelid
+googlesamples-assistant-posixqueue --project-id $projectid --device-model-id $modelid  --display
 EOF
 
 chmod +x startGoogleAssistant.sh

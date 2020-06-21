@@ -186,8 +186,9 @@ class SampleAssistant(object):
                 if fs:
                     device_actions_futures.extend(fs)
             if self.display and resp.screen_out.data:
-                system_browser = browser_helpers.system_browser
-                system_browser.display(resp.screen_out.data)
+                html_file = open("/var/tmp/Assistants.html","w")
+                html_file.write(resp.screen_out.data.decode('utf-8'))
+                html_file.close()
 
         if len(device_actions_futures):
             logging.info('Waiting for device executions to complete.')
