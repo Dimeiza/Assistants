@@ -36,30 +36,26 @@ index b3ec46e57..c87dc6dac 100644
  if (DIAGNOSTICS)
      list(APPEND LibSampleApp_SOURCES SDKDiagnostics.cpp)
 diff --git a/SampleApp/src/GuiRenderer.cpp b/SampleApp/src/GuiRenderer.cpp
-index 0e6b0361e..b3c99d9a9 100644
+index 0e6b0361e..307cbeb19 100644
 --- a/SampleApp/src/GuiRenderer.cpp
 +++ b/SampleApp/src/GuiRenderer.cpp
-@@ -19,6 +19,8 @@
+@@ -19,6 +19,7 @@
  #include <AVSCommon/Utils/JSON/JSONUtils.h>
  #include "SampleApp/ConsolePrinter.h"
  #include "SampleApp/GuiRenderer.h"
-+#include <fstream>
 +#include "SampleApp/HTMLRenderer.h"
  
  namespace alexaClientSDK {
  namespace sampleApp {
-@@ -153,8 +155,13 @@ void GuiRenderer::renderTemplateCard(const std::string& jsonPayload, avsCommon::
+@@ -153,8 +154,10 @@ void GuiRenderer::renderTemplateCard(const std::string& jsonPayload, avsCommon::
      buffer += RENDER_FOOTER;
  
  #endif
 -
      ConsolePrinter::simplePrint(buffer);
 +
-+    std::string htmlContents = HTMLRenderer::getHTML(templateType,payload);
-+
-+    std::ofstream HTMLFile("/var/tmp/Assistants.html");
-+    HTMLFile << htmlContents;
-+    HTMLFile.close();
++    // std::cout << jsonPayload << std::endl;
++    HTMLRenderer::outputHTMLToFile(templateType,payload);
  }
  
  void GuiRenderer::clearTemplateCard() {

@@ -3,7 +3,9 @@
 #include "SampleApp/HTMLRenderer.h"
 #include "SampleApp/ConsolePrinter.h"
 #include <errno.h>
-
+#include <vector>
+#include <set>
+#include <fstream>
 
 namespace alexaClientSDK {
 namespace sampleApp {
@@ -28,19 +30,30 @@ static const std::string TITLE_NODE("title");
 /// Tag for find the maintitle in the title node of the RenderTemplate directive
 static const std::string MAIN_TITLE_TAG("mainTitle");
 
-std::string HTMLRenderer::getHTML(const std::string &templateType,rapidjson::Document &payload){
+
+void HTMLRenderer::outputHTMLToFile(const std::string &templateType,rapidjson::Document &payload){
+
+    std::string htmlContents =HTMLRenderer::renderHTML(templateType,payload);
+
+    std::ofstream HTMLFile("/var/tmp/Assistants.html");
+    HTMLFile << htmlContents;
+    HTMLFile.close();
+
+}
+
+std::string HTMLRenderer::renderHTML(const std::string &templateType,rapidjson::Document &payload){
 
     std::string htmlContents= "";
     std::string body;
 
     if(templateType == "BodyTemplate1"){
-        body = RenderBodyTemplate1HTML(payload);
+        body = renderBodyTemplate1HTML(payload);
     }
     else if(templateType == "BodyTemplate2"){
-        body = RenderBodyTemplate2HTML(payload);
+        body = renderBodyTemplate2HTML(payload);
     }
     else if(templateType == "WeatherTemplate"){
-        body = RenderWeatherTemplateHTML(payload);
+        body = renderWeatherTemplateHTML(payload);
     }
     else{
         body = "Sorry, this template is not supported.";
@@ -54,7 +67,7 @@ std::string HTMLRenderer::getHTML(const std::string &templateType,rapidjson::Doc
 
 }
 
-struct tempStr{
+struct weatherStr{
     std::string imageURL;
     std::string day;
     std::string date;
@@ -63,163 +76,147 @@ struct tempStr{
 };
 
 
-std::string HTMLRenderer::RenderWeatherTemplateHTML(rapidjson::Document &payload){
+std::string HTMLRenderer::renderWeatherTemplateHTML(rapidjson::Document &payload){
 
+    std::vector<weatherStr> forecastStrs;
 
-    tempStr forecastStrs[4];
     rapidjson::Value::ConstMemberIterator titleNode;
     if (!jsonUtils::findNode(payload, TITLE_NODE, &titleNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no title field");
-        return "";
     }
 
-    std::string mainTitle;
+    std::string mainTitle = "";
     if (!jsonUtils::retrieveValue(titleNode->value, MAIN_TITLE_TAG, &mainTitle)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no main title field");
-        return "";
     }
 
-    std::string subTitle;
+    std::string subTitle= "";
     if (!jsonUtils::retrieveValue(titleNode->value, "subTitle", &subTitle)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no main title field");
-        return "";
     }
 
-    std::string currentWeather;
+    std::string currentWeather= "";
     if (!jsonUtils::retrieveValue(payload, std::string("currentWeather"), &currentWeather)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
 
-    std::string description;
+    std::string description= "";
     if (!jsonUtils::retrieveValue(payload, std::string("description"), &description)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator currentWeatherIcon;
     if (!jsonUtils::findNode(payload, std::string("currentWeatherIcon"), &currentWeatherIcon)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator lowTemperature;
     if (!jsonUtils::findNode(payload, "lowTemperature", &lowTemperature)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no title field");
-        return "";
     }
 
     std::string lowTemperatureValue;
     if (!jsonUtils::retrieveValue(lowTemperature->value, std::string("value"), &lowTemperatureValue)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator lowTemperatureImage;
     if (!jsonUtils::findNode(lowTemperature->value, std::string("arrow"), &lowTemperatureImage)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator lowTemperatureImageSourceNode;
     if (!jsonUtils::findNode(lowTemperatureImage->value, std::string("sources"), &lowTemperatureImageSourceNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
 
-    std::string lowTemperatureArrow;
+    std::string lowTemperatureArrow= "";
     if (!jsonUtils::retrieveValue(lowTemperatureImageSourceNode->value[0], std::string("url"), &lowTemperatureArrow)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no url field");
-        return "";
     }
 
 
     rapidjson::Value::ConstMemberIterator highTemperature;
     if (!jsonUtils::findNode(payload, "highTemperature", &highTemperature)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no title field");
-        return "";
     }
 
-    std::string highTemperatureValue;
+    std::string highTemperatureValue= "";
     if (!jsonUtils::retrieveValue(highTemperature->value, std::string("value"), &highTemperatureValue)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator highTemperatureImage;
     if (!jsonUtils::findNode(highTemperature->value, std::string("arrow"), &highTemperatureImage)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator highTemperatureImageSourceNode;
     if (!jsonUtils::findNode(highTemperatureImage->value, std::string("sources"), &highTemperatureImageSourceNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
-    std::string highTemperatureArrow;
+    std::string highTemperatureArrow= "";
     if (!jsonUtils::retrieveValue(highTemperatureImageSourceNode->value[0], std::string("url"), &highTemperatureArrow)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no url field");
-        return "";
     }
 
 
     rapidjson::Value::ConstMemberIterator imageSourceNode;
     if (!jsonUtils::findNode(currentWeatherIcon->value, std::string("sources"), &imageSourceNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
-    std::string currentWeatherIconUrl;
+    std::string currentWeatherIconUrl= "";
     if (!jsonUtils::retrieveValue(imageSourceNode->value[0], std::string("url"), &currentWeatherIconUrl)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no url field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator weatherForecast;
     if (!jsonUtils::findNode(payload, "weatherForecast", &weatherForecast)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no weatherForecast field");
-        return "";
     }
 
-
-    for(int i = 0;i < 4;i++){
+    weatherStr weather;
+    for (rapidjson::Value::ConstValueIterator weatherit = weatherForecast->value.Begin();
+        weatherit != weatherForecast->value.End();weatherit++){
+        
         rapidjson::Value::ConstMemberIterator forecastImageNode;
-        if (!jsonUtils::findNode(weatherForecast->value[i], "image", &forecastImageNode)) {
+        if (!jsonUtils::findNode(*weatherit, "image", &forecastImageNode)) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no forecastImageNode field");
-            return "";
+            break;
         }
 
         rapidjson::Value::ConstMemberIterator forecastImageSourceNode;
         if (!jsonUtils::findNode(forecastImageNode->value, "sources", &forecastImageSourceNode)) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no forecastImageSourceNode field");
-            return "";
+            break;
         }
 
-        if (!jsonUtils::retrieveValue(forecastImageSourceNode->value[0], std::string("url"), &forecastStrs[i].imageURL) ){
+        if (!jsonUtils::retrieveValue(forecastImageSourceNode->value[0], std::string("url"), &weather.imageURL) ){
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageURL field");
-            return "";
+            break;
         }
         
-        if (!jsonUtils::retrieveValue(weatherForecast->value[i], std::string("day"), &(forecastStrs[i].day))) {
+        if (!jsonUtils::retrieveValue(*weatherit, std::string("day"), &(weather.day))) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no day field");
-            return "";
+            break;
         }
-        if (!jsonUtils::retrieveValue(weatherForecast->value[i], std::string("date"), &(forecastStrs[i].date))) {
+        if (!jsonUtils::retrieveValue(*weatherit, std::string("date"), &(weather.date))) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no date field");
-            return "";
+            break;
         }
-        if (!jsonUtils::retrieveValue(weatherForecast->value[i], std::string("highTemperature"), &(forecastStrs[i].highTemperature))) {
+        if (!jsonUtils::retrieveValue(*weatherit, std::string("highTemperature"), &(weather.highTemperature))) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no highTemperature field");
-            return "";
+            break;
         }
 
-        if (!jsonUtils::retrieveValue(weatherForecast->value[i], std::string("lowTemperature"), &(forecastStrs[i].lowTemperature))) {
+        if (!jsonUtils::retrieveValue(*weatherit, std::string("lowTemperature"), &(weather.lowTemperature))) {
             ConsolePrinter::simplePrint("ERROR: Template JSON payload has no lowTemperature field");
-            return "";
+            break;
         }
+        forecastStrs.push_back(weather);
     }
 
     std::string WeatherTemplateHTML;
@@ -236,16 +233,16 @@ std::string HTMLRenderer::RenderWeatherTemplateHTML(rapidjson::Document &payload
     WeatherTemplateHTML += description + "<br>";
     WeatherTemplateHTML += currentWeather + "<br>";
     WeatherTemplateHTML += "</td><td>";
-    WeatherTemplateHTML += "<img src=\"" + lowTemperatureArrow + "\"/>";
-    WeatherTemplateHTML += lowTemperatureValue + "<br>";
     WeatherTemplateHTML += "<img src=\"" + highTemperatureArrow + "\"/>";
     WeatherTemplateHTML += highTemperatureValue;
+    WeatherTemplateHTML += "<img src=\"" + lowTemperatureArrow + "\"/>";
+    WeatherTemplateHTML += lowTemperatureValue + "<br>";
     WeatherTemplateHTML += "</td></tr>";
     WeatherTemplateHTML += "</table>";
 
     WeatherTemplateHTML += "<table>";
     WeatherTemplateHTML += "<tr>";
-    for(int i = 0;i < 4;i++){
+    for(unsigned int i = 0;i < forecastStrs.size();i++){
         
         WeatherTemplateHTML += "<td>";
         WeatherTemplateHTML += forecastStrs[i].date;
@@ -255,7 +252,7 @@ std::string HTMLRenderer::RenderWeatherTemplateHTML(rapidjson::Document &payload
     }
     WeatherTemplateHTML += "</tr>";
     WeatherTemplateHTML += "<tr>";
-    for(int i = 0;i < 4;i++){
+    for(unsigned int i = 0;i < forecastStrs.size();i++){
         
         WeatherTemplateHTML += "<td>";
         WeatherTemplateHTML += "<img src=\"" + forecastStrs[i].imageURL + "\"/>";
@@ -280,25 +277,22 @@ std::string HTMLRenderer::RenderWeatherTemplateHTML(rapidjson::Document &payload
 
 }
 
-std::string HTMLRenderer::RenderBodyTemplate1HTML(rapidjson::Document &payload){
+std::string HTMLRenderer::renderBodyTemplate1HTML(rapidjson::Document &payload){
 
 
     rapidjson::Value::ConstMemberIterator titleNode;
     if (!jsonUtils::findNode(payload, TITLE_NODE, &titleNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no title field");
-        return "";
     }
 
     std::string mainTitle;
     if (!jsonUtils::retrieveValue(titleNode->value, MAIN_TITLE_TAG, &mainTitle)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no main title field");
-        return "";
     }
 
-    std::string textField;
+    std::string textField = "";
     if (!jsonUtils::retrieveValue(payload, std::string("textField"), &textField)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
     std::string BodyTemplate1HTML;
 
@@ -321,45 +315,39 @@ std::string HTMLRenderer::RenderBodyTemplate1HTML(rapidjson::Document &payload){
 
 
 
-std::string HTMLRenderer::RenderBodyTemplate2HTML(rapidjson::Document &payload){
+std::string HTMLRenderer::renderBodyTemplate2HTML(rapidjson::Document &payload){
 
-    std::string BodyTemplate2HTML;
+    std::string BodyTemplate2HTML = "";
 
 
     rapidjson::Value::ConstMemberIterator titleNode;
     if (!jsonUtils::findNode(payload, TITLE_NODE, &titleNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no title field");
-        return "";
     }
 
-    std::string mainTitle;
+    std::string mainTitle= "";
     if (!jsonUtils::retrieveValue(titleNode->value, MAIN_TITLE_TAG, &mainTitle)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no main title field");
-        return "";
     }
 
-    std::string textField;
+    std::string textField= "";
     if (!jsonUtils::retrieveValue(payload, std::string("textField"), &textField)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no text field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator imageNode;
     if (!jsonUtils::findNode(payload, std::string("image"), &imageNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no image field");
-        return "";
     }
 
     rapidjson::Value::ConstMemberIterator imageSourceNode;
     if (!jsonUtils::findNode(imageNode->value, std::string("sources"), &imageSourceNode)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no imageSource field");
-        return "";
     }
 
-    std::string url;
+    std::string url= "";
     if (!jsonUtils::retrieveValue(imageSourceNode->value[0], std::string("url"), &url)) {
         ConsolePrinter::simplePrint("ERROR: Template JSON payload has no url field");
-        return "";
     }
 
 
@@ -383,11 +371,6 @@ std::string HTMLRenderer::RenderBodyTemplate2HTML(rapidjson::Document &payload){
 
     return BodyTemplate2HTML;
 }
-
-
-
-
-
 
 
 }}
