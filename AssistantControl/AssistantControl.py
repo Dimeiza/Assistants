@@ -7,12 +7,21 @@ import sys
 import posix_ipc
 import json
 import time
+import shutil
+import os
+import requests
 
 from mic_hat_4 import pixels
 from mic_hat_4 import alexa_led_pattern
 from mic_hat_4 import google_home_led_pattern
 
+from MMMApi import MMMApi
+
 interrupted = False
+MMMApiInstance = MMMApi()
+
+ALEXA = 0
+GOOGLE_ASSISTANT = 1
 
 def signal_handler(signal, frame):
 
@@ -31,7 +40,7 @@ def alexa_callback():
 
     pixels.pixels.pattern = alexa_led_pattern.AlexaLedPattern(show=pixels.pixels.show)
     print('alexa detected!')
-    communicateAssistant(led = pixels.pixels,messageQueue = alexa_mq)
+    communicateAssistant(led = pixels.pixels,messageQueue = alexa_mq,assistant_no = ALEXA)
     print('alexa finished')
     
 def google_callback():
@@ -40,12 +49,13 @@ def google_callback():
     pixels.pixels.pattern = google_home_led_pattern.GoogleHomeLedPattern(show=pixels.pixels.show)
 
     print('google detected!')
-    communicateAssistant(led = pixels.pixels,messageQueue = google_mq)
+    communicateAssistant(led = pixels.pixels,messageQueue = google_mq,assistant_no = GOOGLE_ASSISTANT)
     print('google finished')
     
-def communicateAssistant(led,messageQueue):
+def communicateAssistant(led,messageQueue,assistant_no):
 
     led.wakeup()
+    MMMApiInstance.wakeup(assistant_no)
 
     # remove a messages of queue if have a message before Assistantcotrol sends wakeup to Assistant
     # (status synchronization)
@@ -57,7 +67,6 @@ def communicateAssistant(led,messageQueue):
 
     print('wakeup')
     messageQueue.send('wakeup')
-    
 
     while True:
         try:
@@ -65,13 +74,18 @@ def communicateAssistant(led,messageQueue):
             # If Assistant already finished. Assistant controller receives no message from Assistant and finishes after timeout.
             msg = assistantsControl_mq.receive(timeout=15)
             if msg[0] == b'finish':
+                MMMApiInstance.finish(assistant_no)
                 break
             elif msg[0] == b'speak':
+                MMMApiInstance.off()
+                MMMApiInstance.speak(assistant_no)
                 led.speak()
             elif msg[0] == b'think':
+                MMMApiInstance.think(assistant_no)
                 led.think()
         except posix_ipc.BusyError:
             break
+
     sleep(0.5)
     led.off()
 
