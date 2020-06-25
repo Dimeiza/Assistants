@@ -284,6 +284,133 @@ If you want to uninstall service, run following.
 ```
 sudo bash UninstallService.sh
 ```
+## (Experimental) SmartDisplay using MagicMirror (Raspberry Pi 4 Recommanded)
+
+Now, Assistant Control outputs HTML that assistants(Alexa or Google Assistant) returns.
+
+So if you install MagicMirror in Pi and configure it to show these HTML, you can get a PoC like a smartdisplay powered by MagicMirror.
+
+1. Install MagicMirror.
+
+https://magicmirror.builders/
+
+Installation & Usage
+
+https://docs.magicmirror.builders/getting-started/installation.html
+
+Follow above documentation to perform "Manual installation" and test MagicMirror.
+
+2. Install MagicMirror modules.
+
+This PoC needs following modules of MagicMirror.
+
+* MMM-SmartWeb Display
+
+https://github.com/AgP42/MMM-SmartWebDisplay
+
+* MMM-Remote-Control(fork version for MMM-SmartWeb Display)
+
+https://github.com/AgP42/MMM-Remote-Control
+
+* MMM-Api
+
+https://github.com/juzim/MMM-Api
+
+Follow installation procedure in above sites to install modules.
+
+3. Create symbolic link to HTML that Assistants outputs.
+
+Execute this command in MagicMirror/modules/MMM-SmartWebDisplay/ folder.
+
+```
+mkdir public
+cd public
+ln -s /var/tmp/Assistants.html Assistants.html
+```
+
+These commands create a link between the HTML output by the assistant and the HTML displayed by MagicMirror.
+
+4. Add modules to config.js.
+
+```
+var config = {
+    	...
+	modules: [
+        	...
+		{
+			module: 'MMM-Api'
+		},
+		{
+			module: 'MMM-SmartWebDisplay',
+			position: 'middle_center',	// This can be any of the regions.
+			config: {
+				// See 'Configuration options' for more information.
+				logDebug: false, //set to true to get detailed debug logs. To see them : "Ctrl+Shift+i"
+				height:"100%", //hauteur du cadre en pixel ou %
+				width:"100%", //largeur
+				updateInterval: 0, //in min. Set it to 0 for no refresh (for videos)
+				NextURLInterval: 0.5, //in min, set it to 0 not to have automatic URL change. If only 1 URL given, it will be updated
+				displayLastUpdate: true, //to display the last update of the URL
+				displayLastUpdateFormat: 'ddd - HH:mm:ss', //format of the date and time to display
+				url: ["http://magicmirror.builders/", "https://www.youtube.com/embed/Qwc2Eq6YXTQ?autoplay=1"], //source of the URL to be displayed
+				scrolling: "no", // allow scrolling or not. html 4 only
+				shutoffDelay: 10000 //delay in miliseconds to video shut-off while using together with MMM-PIR-Sensor 
+			}
+		},
+		{
+			module: 'MMM-Remote-Control'
+		},
+		...
+	]
+	...
+}
+```
+
+5. Set "url" attribute in MMM-SmartWebDisplay config.
+
+MMM-SmartDisplay can specify the page to display by setting the "url" attribute.
+
+So, specify it following.
+
+```
+url: ["./modules/MMM-SmartWebDisplay/public/Assistants.html"], //source of the URL to be displayed
+```
+
+6. Configure display position.
+
+With default configuration, look and feel is not good for smart mirror.
+
+You probably need to configure a position of MMM-SmartWeb Display. you can configure it by addition custom css as /css/custom.css.
+
+You can refer custom.css and config.js that I used for these configuration(in misc folder).
+
+7. Start MagicMirror.
+
+After these configuration, start MagicMirror.
+
+```
+npm run start
+```
+
+8. Start Assistants.
+
+```
+./startsample.sh
+```
+
+```
+./startGoogleAssistant.sh
+```
+
+```
+./startAssistantControl.sh 
+```
+
+9. Call Assistants.
+
+If you can succeeded these settings, this PoC beheviour as following.
+
+[![SmartDisplay PoC](https://img.youtube.com/vi/Pbm432oaxBY/0.jpg)](https://www.youtube.com/watch?v=Pbm432oaxBY "SmartDisplay PoC")
 
 ## Known Issue
 
