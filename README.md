@@ -302,7 +302,7 @@ Follow above documentation to perform "Manual installation" and test MagicMirror
 
 2. Install MagicMirror modules.
 
-This PC needs following modules of MagicMirror.
+This PoC needs following modules of MagicMirror.
 
 * MMM-SmartWeb Display
 
