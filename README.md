@@ -342,10 +342,23 @@ var config = {
 		},
 		{
 			module: 'MMM-SmartWebDisplay',
-        	}
-        	{
+			position: 'middle_center',	// This can be any of the regions.
+			config: {
+				// See 'Configuration options' for more information.
+				logDebug: false, //set to true to get detailed debug logs. To see them : "Ctrl+Shift+i"
+				height:"100%", //hauteur du cadre en pixel ou %
+				width:"100%", //largeur
+				updateInterval: 0, //in min. Set it to 0 for no refresh (for videos)
+				NextURLInterval: 0.5, //in min, set it to 0 not to have automatic URL change. If only 1 URL given, it will be updated
+				displayLastUpdate: true, //to display the last update of the URL
+				displayLastUpdateFormat: 'ddd - HH:mm:ss', //format of the date and time to display
+				url: ["http://magicmirror.builders/", "https://www.youtube.com/embed/Qwc2Eq6YXTQ?autoplay=1"], //source of the URL to be displayed
+				scrolling: "no", // allow scrolling or not. html 4 only
+				shutoffDelay: 10000 //delay in miliseconds to video shut-off while using together with MMM-PIR-Sensor 
+			}
+		},
+		{
 			module: 'MMM-Remote-Control'
-			...
 		},
 		...
 	]
