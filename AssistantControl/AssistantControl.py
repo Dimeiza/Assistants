@@ -93,7 +93,7 @@ def communicateAssistant(led,messageQueue,assistant_no):
 
 if len(sys.argv) != 3:
     print("Error: need to specify 2 model names")
-    print("Usage: python demo.py 1st.model 2nd.model")
+    print("Usage: python AssistantControl.py 1st.model 2nd.model")
     sys.exit(-1)
 
 models = sys.argv[1:]
