@@ -284,8 +284,7 @@ If you want to uninstall service, run following.
 ```
 sudo bash UninstallService.sh
 ```
-
-## (Experimental) SmartDisplay with MagicMirror
+## (Experimental) SmartDisplay using MagicMirror (Raspberry Pi 4 Recommanded)
 
 Now, Assistant Control outputs HTML that assistants(Alexa or Google Assistant) returns.
 
@@ -335,18 +334,22 @@ These commands create a link between the HTML output by the assistant and the HT
 
 ```
 var config = {
-    …
+    	...
 	modules: [
-        …
+        	...
 		{
 			module: 'MMM-Api'
 		},
 		{
 			module: 'MMM-SmartWebDisplay',
-        }
-        module: 'MMM-Remote-Control'
+        	}
+        	{
+			module: 'MMM-Remote-Control'
+			...
 		},
-    }
+		...
+	]
+	...
 }
 ```
 
@@ -378,23 +381,23 @@ npm run start
 
 8. Start Assistants.
 
-'''
+```
 ./startsample.sh
-'''
+```
 
-'''
+```
 ./startGoogleAssistant.sh
-'''
+```
 
-'''
+```
 ./startAssistantControl.sh 
-'''
+```
 
 9. Call Assistants.
 
 If you can succeeded these settings, this PoC beheviour as following.
 
-
+[![SmartDisplay PoC](https://img.youtube.com/vi/Pbm432oaxBY/0.jpg)](https://www.youtube.com/watch?v=Pbm432oaxBY "SmartDisplay PoC")
 
 ## Known Issue
 
