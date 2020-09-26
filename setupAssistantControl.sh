@@ -9,7 +9,7 @@ git clone https://github.com/Kitt-AI/snowboy.git
 sudo apt-get -y install libatlas-base-dev
 
 sudo apt-get -y  install swig3.0 python-pyaudio python3-pyaudio sox swig
-pip install pyaudio spidev posix_ipc gpiozero numpy RPi.GPIO
+pip install pyaudio spidev posix_ipc gpiozero numpy RPi.GPIO pyyaml
 
 cd snowboy/swig/Python3
 make
