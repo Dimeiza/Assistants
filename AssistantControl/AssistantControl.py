@@ -10,6 +10,7 @@ import time
 import shutil
 import os
 import requests
+import yaml
 
 from mic_hat_4 import pixels
 from mic_hat_4 import alexa_led_pattern
@@ -89,31 +90,32 @@ def communicateAssistant(led,messageQueue,assistant_no):
     sleep(0.5)
     led.off()
 
+sensitivity = []
+callbacks = []
+models = []
 
+if __name__=='__main__':
 
-if len(sys.argv) != 3:
-    print("Error: need to specify 2 model names")
-    print("Usage: python AssistantControl.py 1st.model 2nd.model")
-    sys.exit(-1)
+    # capture SIGINT signal, e.g., Ctrl+C
+    signal.signal(signal.SIGINT, signal_handler)
 
-models = sys.argv[1:]
+    with open('AssistantControl.yaml', 'r') as yml:
+        config = yaml.load(yml)
 
-# capture SIGINT signal, e.g., Ctrl+C
-signal.signal(signal.SIGINT, signal_handler)
+    for Assistant in config['Assistants'].values():
+        sensitivity.append(Assistant['Sensitibity'])
+        models.append(Assistant['Model'])
+        callbacks.append(globals()[Assistant['Callback']])
 
-sensitivity = [0.6,0.6]
-detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
-callbacks = [alexa_callback, google_callback]
-print('Listening... Press Ctrl+C to exit')
+    detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
+    print('Listening... Press Ctrl+C to exit')
 
-google_mq = posix_ipc.MessageQueue("/GoogleAssistantQueue", posix_ipc.O_CREAT)
-alexa_mq = posix_ipc.MessageQueue("/AlexaQueue", posix_ipc.O_CREAT)
-assistantsControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue",posix_ipc.O_CREAT,read=True)
+    google_mq = posix_ipc.MessageQueue("/GoogleAssistantQueue", posix_ipc.O_CREAT)
+    alexa_mq = posix_ipc.MessageQueue("/AlexaQueue", posix_ipc.O_CREAT)
+    assistantsControl_mq = posix_ipc.MessageQueue("/AssistantsControlQueue",posix_ipc.O_CREAT,read=True)
 
-# main loop
-detector.start(detected_callback=callbacks,
-               interrupt_check=interrupt_callback,
+    detector.start(detected_callback=callbacks,
+                interrupt_check=interrupt_callback,
                sleep_time=0.03)
 
-detector.terminate()
-
+    detector.terminate()
