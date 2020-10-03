@@ -7,7 +7,7 @@ THIRD_PARTY_PATH="$CURRENT_DIR/third-party"
 cd "$THIRD_PARTY_PATH"
 git clone https://github.com/respeaker/seeed-voicecard.git
 cd seeed-voicecard
-sudo ./install.sh 2mic
+sudo ./install.sh --compat-kernel
 
 cd ..
 
