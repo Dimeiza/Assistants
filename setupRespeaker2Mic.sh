@@ -4,6 +4,7 @@ CURRENT_DIR="$(pwd)"
 INSTALL_BASE=${INSTALL_BASE:-"$CURRENT_DIR"}
 THIRD_PARTY_PATH="$CURRENT_DIR/third-party"
 
+mkdir -p "$THIRD_PARTY_PATH"
 cd "$THIRD_PARTY_PATH"
 git clone https://github.com/respeaker/seeed-voicecard.git
 cd seeed-voicecard
