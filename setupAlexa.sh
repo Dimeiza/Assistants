@@ -68,20 +68,6 @@ bash genConfig.sh config.json 12345 \
 
 sed -i "2s/^/\n    \"gstreamerMediaPlayer\":{\n        \"audioSink\":\"alsasink\"\n    },\n/" $INSTALL_BASE/avs-device-sdk/sdk-build/Integration/AlexaClientSDKConfig.json 
 
-cat << EOF > "$SOUND_CONFIG"
-pcm.!default {
-  type asym
-   playback.pcm {
-     type plug
-     slave.pcm "hw:0,0"
-   }
-   capture.pcm {
-     type plug
-     slave.pcm "hw:1,0"
-   }
-}
-EOF
-
 cat << EOF > "$START_SCRIPT"
 #!/bin/bash
 cd "$INSTALL_BASE/avs-device-sdk/sdk-build/"

@@ -58,6 +58,3 @@ python AssistantControl.py resources/alexa.umdl resources/snowboy.umdl
 EOF
 
 chmod +x startAssistantControl.sh
-
-cp ~/.asoundrc .asoundrc.org
-cp ./misc/asoundrc.forRespeaker ~/.asoundrc

@@ -1,6 +1,6 @@
 # AssistantControl
 
-Tools to assist when run Alexa and Google Assistant at the same time on Raspberry Pi(with Respeaker 2mic/4mic).
+Tools to assist when run Alexa and Google Assistant at the same time on Raspberry Pi(with Respeaker 2mic/4mic/6mic).
 
 ## Notice
 
@@ -66,19 +66,15 @@ You need:
 
 2. SD card with a flesh install of Raspbian Stretch
 
-3. Audio peripherals:
-    * external speaker with 3.5mm Jack
-
-4. ReSpeaker. You can choose one in following.
+3. ReSpeaker. You can choose one in following.
     * [ReSpeaker 2-Mics Pi HAT](https://www.seeedstudio.com/ReSpeaker-2-Mics-Pi-HAT-p-2874.html) or
 
     * [ReSpeaker 4-Mic Array for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html)
 
     * [ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi](https://www.seeedstudio.com/ReSpeaker-6-Mic-Circular-Array-Kit-for-Raspberry-Pi.html)
 
-5. USB Sound Output(I recommended: if you use Respeaker 4-Mic).
+4. USB Sound Output(I recommended: if you use Respeaker 4-Mic).
     * [For example](https://www.amazon.co.uk/TechRise-External-Aluminum-Headphone-Microphone/dp/B0789CN8CT)
-    * I seem it is stabler than builtin(bcm2835) sound output.
 
 ## Install
 
@@ -147,16 +143,10 @@ Device Model ID of your device:
 
 ### Respeaker setup
 
-1. Run this command according to your device.
+1. Run this command
 
-ReSpeaker 2-Mics Pi HAT
 ```
-bash setupRespeaker2Mic.sh
-```
-
-ReSpeaker 4-Mic Array for Raspberry Pi or ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
-```
-bash setupRespeaker4Mic.sh
+bash setupRespeaker.sh
 ```
 
 2. After script finished, configure SPI to be enable.
@@ -168,7 +158,66 @@ bash setupRespeaker4Mic.sh
 4. Select "Yes".
 ```
 
-3. Reboot.
+3. set .asoundrc.
+
+set .asoundrc in your home folder according to the Respeaker you have.
+
+* ReSpeaker 2-Mic Pi Hat:
+
+No copy needed. check that .asoundrc doesn't exist in your home folder.
+
+```
+ls -la ~/
+```
+
+* ReSpeaker 4-Mic Array for Raspberry Pi 
+
+Execute this command in Assistants folder.
+
+```
+cp misc/asoundrc.4mic ~/.asoundrc 
+```
+
+check that .asoundrc exists in your home folder.
+
+```
+ls -la ~/
+```
+
+And update a hardware that is used pcm.dmixer in .asoundrc to match your sound device(USB Sound Output).
+
+```
+pcm.dmixer {
+        type dmix
+        ipc_key 353289
+        slave {
+                pcm "hw:2,0" # update this line to match your sound device(USB Sound Output)
+                period_time 0
+                period_size 1024
+                buffer_size 4096
+        }
+        bindings {
+                0 0
+                1 1
+        }
+}
+```
+
+* ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
+
+Execute this command in Assistants folder.
+
+```
+cp misc/asoundrc.6mic ~/.asoundrc 
+```
+
+check that .asoundrc exists in your home folder.
+
+```
+ls -la ~/
+```
+
+4. Reboot.
 
 ### AsssitantControl setup
 
