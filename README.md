@@ -147,16 +147,10 @@ Device Model ID of your device:
 
 ### Respeaker setup
 
-1. Run this command according to your device.
+1. Run this command
 
-ReSpeaker 2-Mics Pi HAT
 ```
-bash setupRespeaker2Mic.sh
-```
-
-ReSpeaker 4-Mic Array for Raspberry Pi or ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
-```
-bash setupRespeaker4Mic.sh
+bash setupRespeaker.sh
 ```
 
 2. After script finished, configure SPI to be enable.
@@ -168,7 +162,47 @@ bash setupRespeaker4Mic.sh
 4. Select "Yes".
 ```
 
-3. Reboot.
+3. set .asoundrc.
+
+set .asoundrc in your home folder according to the Respeaker you have.
+
+* ReSpeaker 2-Mic Pi Hat:
+
+No copy needed. check that .asoundrc doesn't exist in your home folder.
+
+```
+ls -la ~/
+```
+
+* ReSpeaker 4-Mic Array for Raspberry Pi 
+
+Execute this command in Assistants folder.
+
+```
+cp misc/asoundrc.4mic ~/.asoundrc 
+```
+
+check that .asoundrc exists in your home folder.
+
+```
+ls -la ~/
+```
+
+* ReSpeaker 6-Mic Circular Array Kit for Raspberry Pi
+
+Execute this command in Assistants folder.
+
+```
+cp misc/asoundrc.6mic ~/.asoundrc 
+```
+
+check that .asoundrc exists in your home folder.
+
+```
+ls -la ~/
+```
+
+4. Reboot.
 
 ### AsssitantControl setup
 

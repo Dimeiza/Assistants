@@ -11,7 +11,6 @@ cd seeed-voicecard
 sudo ./install.sh --compat-kernel
 
 cd ..
-git clone https://github.com/respeaker/4mics_hat
 
 git clone https://github.com/Dimeiza/ReSpeakerLED
 
