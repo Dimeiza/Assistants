@@ -270,6 +270,56 @@ python AssistantControl.py resources/alexa.umdl resources/HeyGoogle.pmdl
 
 Restart startAssistantControl.sh and try to say new wake word.
 
+## Customize assistants behaviour 
+
+　You can customize:
+
+* Callable assistant.
+* Sensitivity of each assistant's wakeword 
+* Path of each assistant's wakeword model
+
+　These configuration is set in AssistantControl/AssistantControl.yaml.
+
+```yaml
+Assistants:
+  Alexa:
+    Model: resources/alexa.umdl
+    Sensitibity: 0.6
+    Callback: alexa_callback
+  GoogleAssistant:
+    Model: resources/snowboy.umdl
+    Sensitibity: 0.6
+    Callback: google_callback
+```
+
+### for example
+
+　If you want to use this prototype Alexa only, simply remove an entry of Google Assistant.
+
+```yaml
+Assistants:
+  Alexa:
+    Model: resources/alexa.umdl
+    Sensitibity: 0.6
+    Callback: alexa_callback
+```
+
+　If you want to decrease a wakeword sencitivity, update value of "Sensitivity".
+
+```yaml
+Assistants:
+  Alexa:
+    Model: resources/alexa.umdl
+    Sensitibity: 0.5
+    Callback: alexa_callback
+  GoogleAssistant:
+    Model: resources/snowboy.umdl
+    Sensitibity: 0.4
+    Callback: google_callback
+```
+
+　Don't update "Callback" entry, It is stlongly related an internal behaviour of script.
+
 ## Install as a service / Uninstall
 
 If you success that you run this tool with terminals, you can install this tool as a service.

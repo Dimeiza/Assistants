@@ -1,0 +1,9 @@
+Assistants:
+  Alexa:
+    Model: resources/alexa.umdl
+    Sensitibity: 0.6
+    Callback: alexa_callback
+  GoogleAssistant:
+    Model: resources/snowboy.umdl
+    Sensitibity: 0.6
+    Callback: google_callback
