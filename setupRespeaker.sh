@@ -8,6 +8,7 @@ mkdir -p "$THIRD_PARTY_PATH"
 cd "$THIRD_PARTY_PATH"
 git clone https://github.com/respeaker/seeed-voicecard.git
 cd seeed-voicecard
+git checkout 8cce4e8ffa77e1e2b89812e5e2ccf6cfbc1086cf
 sudo ./install.sh --compat-kernel
 
 cd ..

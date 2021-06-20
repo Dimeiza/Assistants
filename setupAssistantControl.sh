@@ -5,10 +5,11 @@ source env/bin/activate
 cd AssistantControl
 
 # setup snowboy
-git clone https://github.com/Kitt-AI/snowboy.git
 sudo apt-get -y install libatlas-base-dev
-
 sudo apt-get -y  install swig3.0 python-pyaudio python3-pyaudio sox swig
+
+git clone https://github.com/Kitt-AI/snowboy.git && cd snowboy && git checkout c9ff036e2ef3f9c422a3b8c9a01361dbad7a9bd4 
+cd ..
 pip install pyaudio spidev posix_ipc gpiozero numpy RPi.GPIO pyyaml
 
 cd snowboy/swig/Python3
@@ -29,8 +30,10 @@ cp snowboy/resources/models/snowboy.umdl resources/
 
 # setup Respeaker LED code
 
-git clone https://github.com/respeaker/mic_hat mic_hat
-git clone https://github.com/respeaker/4mics_hat mic_hat_4
+git clone https://github.com/respeaker/mic_hat mic_hat && cd mic_hat && git checkout 177c447596061dc9012766ed46adbfa163c6d01c
+cd ..
+git clone https://github.com/respeaker/4mics_hat mic_hat_4 && cd mic_hat_4 && git checkout 887d8a5b4dd5db5f3c0e7546eaf00f298c5393dc
+cd ..
 
 sed -i -e 's/import apa102/from . import apa102/' mic_hat/pixels.py
 sed -i -e 's/self.basis/self.pattern/' mic_hat/pixels.py
